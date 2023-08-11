@@ -6,10 +6,8 @@ import { API_URL } from './Constants';
 const AxiosInstance = axios.create({
     baseURL: `${API_URL}`,
     headers: {
-        'content-type': 'application/json',
-        'Access-Control-Request-Private-Network': 'true'
-    },
-    withCredentials: true,
+        'content-type': 'application/json'
+    }
 });
 
 AxiosInstance.interceptors.request.use(config => {
