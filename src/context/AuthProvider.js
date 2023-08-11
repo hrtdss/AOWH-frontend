@@ -1,7 +1,6 @@
 import { createContext, useState } from 'react';
 import axios from "axios";
 
-import AxiosInstance from '../services/AxiosInstance';
 import { API_URL } from '../services/Constants';
 
 
@@ -12,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
     const signIn = async (password, callback) => {
         try {
-            const response = await AxiosInstance.post(`${API_URL}/LogIn`, { password }, { withCredentials: true })
+            const response = await axios.post(`${API_URL}/LogIn`, { password }, { withCredentials: true })
 
             if (response.status !== 200) {
                 throw new Error(`Ошибка: ${response.status}`);
