@@ -32,7 +32,7 @@ function App() {
         //     <Route path='*' element={<ErrorPage/>}/>
         // </Routes>
 
-        <Routes>
+        <Routes path='https://hrtdss.github.io/AOWH-frontend'>
             <Route path='login' element={<LoginPage/>}/>
 
             <Route element={<RequireAuth allowedPages={['employeeCard', 'positionDirectory', 'changes', 'visitSchedule', 'accounting']}/>}>
