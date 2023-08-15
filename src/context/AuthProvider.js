@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
     const signIn = async (password, callback) => {
         try {
-            const response = await axios.post(`http://localhost:8081/api/LogIn`, { password }, { withCredentials: true })
+            const response = await axios.post(`${API_URL}/LogIn`, { password }, { withCredentials: true })
 
             if (response.status !== 200) {
                 throw new Error(`Ошибка: ${response.status}`);
