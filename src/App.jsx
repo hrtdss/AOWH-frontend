@@ -33,10 +33,10 @@ function App() {
         // </Routes>
 
         <Routes>
-            <Route path='login' element={<LoginPage/>}/>
+            <Route path='/AOWH-frontend/login' element={<LoginPage/>}/>
 
             <Route element={<RequireAuth allowedPages={['employeeCard', 'positionDirectory', 'changes', 'visitSchedule', 'accounting']}/>}>
-                <Route path='/' element={<Layout/>}>
+                <Route path='/AOWH-frontend/' element={<Layout/>}>
                     <Route index element={<HomePage/>}/>
 
                     <Route element={<RequireAuth allowedPages={['employeeCard']}/>}>

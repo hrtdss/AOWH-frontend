@@ -27,7 +27,7 @@ const EmployeeEdit = ({ rowData, setActive, changeValue }) => {
         startOfLuchSeniority: { isDirty: false, isEmpty: false },
         positionId: { isDirty: false, isEmpty: false },
         salary: { isDirty: false, isEmpty: false },
-        stock: { isDirty: false, isEmpty: false },
+        stocks: { isDirty: false, isEmpty: false },
         percentageOfSalaryInAdvance: { isDirty: false, isEmpty: false }
     });
 
@@ -96,7 +96,7 @@ const EmployeeEdit = ({ rowData, setActive, changeValue }) => {
         if (e.target.type === 'number') {
             value = e.target.value || 0;
         }
-        else if (e.target.type === 'select-one' && e.target.name === 'stock') { 
+        else if (e.target.type === 'select-one' && e.target.name === 'stocks') { 
             value = e.target.value ? `[${e.target.value}]` : e.target.value;
         }
         else if (e.target.type === 'checkbox') {
@@ -136,6 +136,7 @@ const EmployeeEdit = ({ rowData, setActive, changeValue }) => {
             // if (untouchedFields !== 0) {
             //     editEmployee();
             // }
+
             editEmployee();
         }
     }
@@ -220,7 +221,7 @@ const EmployeeEdit = ({ rowData, setActive, changeValue }) => {
                         <label className='mr-3'>
                             Склад
                         </label>
-                        <select name='stock' className={`w-[204px] h-[34px] py-1 px-2 shadow border ${(valueFlags.stock.isDirty && valueFlags.stock.isEmpty) && 'border-red-500'} rounded`} value={values.stocks.replace(/[^0-9]+/g, "")} onChange={handleChange} onBlur={handleBlur}>
+                        <select name='stocks' className={`w-[204px] h-[34px] py-1 px-2 shadow border ${(valueFlags.stocks.isDirty && valueFlags.stocks.isEmpty) && 'border-red-500'} rounded`} defaultValue={values.stocks.replace(/[^0-9]+/g, "")} onChange={handleChange} onBlur={handleBlur}>
                             <option value=''></option>
                             {
                                 stocks?.map((data, index) =>

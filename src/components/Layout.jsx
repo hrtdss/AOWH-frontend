@@ -22,7 +22,7 @@ const Layout = () => {
         <div className='flex flex-col h-screen'>
             <header>
                 <div className='flex justify-between items-center h-20 max-w-[1340px] mx-auto px-4 font-ttnorms font-medium uppercase text-[#2c3e50] shadow-md rounded-b-2xl'>
-                    <NavLink to='/' className='flex text-base/5 text-left items-center uppercase text-[#2c3e50]'>
+                    <NavLink to='/AOWH-frontend' className='flex text-base/5 text-left items-center uppercase text-[#2c3e50]'>
                         <img className='h-16' src={Logo} alt='header logo'/>
                         <span>Ежедневная срочная<br/>доставка груза</span> {/* className='drop-shadow shadow-[#808080]' */}
                     </NavLink>
@@ -125,7 +125,7 @@ const Layout = () => {
                     </div>
 
                     <div className='text-center mr-4'>
-                        <button className='flex px-4 py-2 font-semibold bg-gray-100 border border-gray-400 rounded-md shadow' onClick={() => signOut(() => navigate('/login', {replace: true}))}>
+                        <button className='flex px-4 py-2 font-semibold bg-gray-100 border border-gray-400 rounded-md shadow' onClick={() => signOut(() => navigate('/AOWH-frontend/login', {replace: true}))}>
                             Log Out
                         </button>
                     </div>

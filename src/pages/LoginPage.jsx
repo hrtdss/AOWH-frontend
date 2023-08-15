@@ -9,7 +9,7 @@ const LoginPage = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const fromPage = location.state?.from?.pathname || '/';
+    const fromPage = location.state?.from?.pathname || '/AOWH-frontend/';
 
     // const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
