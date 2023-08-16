@@ -28,7 +28,7 @@ AxiosInstance.interceptors.response.use(config => {
             localStorage.removeItem('jwtToken');
             localStorage.removeItem('stockId');
 
-            return window.location = '/login';
+            return window.location = '/AOWH-frontend/login';
         }
         else {
             try {

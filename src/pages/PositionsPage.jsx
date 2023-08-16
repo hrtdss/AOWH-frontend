@@ -7,7 +7,7 @@ import PositionAdd from '../components/Positions/PositionAdd';
 import PositionEdit from '../components/Positions/PositionEdit';
 
 
-var selectedPositionData;
+let selectedPositionData;
 
 const PositionsPage = () => {    
     const [modalAddActive, setModalAddActive] = useState(false);

@@ -61,7 +61,7 @@ function App() {
                 </Route>
             </Route>
 
-            <Route path='*' element={<ErrorPage/>}/>
+            <Route path='/AOWH-frontend/*' element={<ErrorPage/>}/>
         </Routes>
     );
 }

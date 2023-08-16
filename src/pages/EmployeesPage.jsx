@@ -9,7 +9,7 @@ import EmployeeAdd from '../components/Employees/EmployeeAdd';
 import EmployeeEdit from '../components/Employees/EmployeeEdit';
 
 
-var selectedEmployeeData;
+let selectedEmployeeData;
 
 const EmployeesPage = () => {
     const [modalAddActive, setModalAddActive] = useState(false);
@@ -163,12 +163,12 @@ const EmployeesPage = () => {
                 <tbody className='bg-slate-100'>
                     {
                         rows
-                        .filter(data => {
+                        ?.filter(data => {
                             return data.surname.toLowerCase().includes(search.toLowerCase()) ||
                                     data.name.toLowerCase().includes(search.toLowerCase()) ||
                                     data.patronymic.toLowerCase().includes(search.toLowerCase());
                         })
-                        .map((data, index) => (
+                        ?.map((data, index) => (
                             <tr key={index} className='hover:bg-slate-200'>
                                 <td className='px-4 py-[6px] border-b-2'>
                                     {`${data.surname} ${data.name} ${data.patronymic}`}

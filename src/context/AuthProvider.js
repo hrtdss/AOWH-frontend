@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
                 callback();
             }
             else {
-                alert("Отметка о посещении был проставлена или же работник уволен.");
+                alert("Отметка о посещении был проставлена или же сотрудник уволен.");
                 // some actions
             }
         }
