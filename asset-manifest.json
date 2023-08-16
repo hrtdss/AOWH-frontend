@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/AOWH-frontend/static/css/main.3337d59b.css",
-    "main.js": "/AOWH-frontend/static/js/main.d3673539.js",
+    "main.css": "/AOWH-frontend/static/css/main.3fda3c55.css",
+    "main.js": "/AOWH-frontend/static/js/main.1e407c70.js",
     "static/media/logo.png": "/AOWH-frontend/static/media/logo.efd469afc66d66a96f1e.png",
     "static/media/TTNORMS-MEDIUM.ttf": "/AOWH-frontend/static/media/TTNORMS-MEDIUM.6c3a2aacb77786ebcbc8.ttf",
     "index.html": "/AOWH-frontend/index.html",
-    "main.3337d59b.css.map": "/AOWH-frontend/static/css/main.3337d59b.css.map",
-    "main.d3673539.js.map": "/AOWH-frontend/static/js/main.d3673539.js.map"
+    "main.3fda3c55.css.map": "/AOWH-frontend/static/css/main.3fda3c55.css.map",
+    "main.1e407c70.js.map": "/AOWH-frontend/static/js/main.1e407c70.js.map"
   },
   "entrypoints": [
-    "static/css/main.3337d59b.css",
-    "static/js/main.d3673539.js"
+    "static/css/main.3fda3c55.css",
+    "static/js/main.1e407c70.js"
   ]
 }
