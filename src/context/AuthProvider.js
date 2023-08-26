@@ -1,7 +1,10 @@
 import { createContext, useState } from 'react';
-import axios from "axios";
+import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 
 import { API_URL } from '../services/Constants';
+import { EmployeeService } from '../services/EmployeeService';
+import { StockService } from '../services/StockService';
 
 
 const AuthContext = createContext('');
@@ -20,6 +23,7 @@ export const AuthProvider = ({ children }) => {
             const data = await response.data;
 
             const accesses = data.accesses;
+            const availableStocks = data.stocks;
 
             let numberOfPages = 0;
             Object.values(accesses).forEach(value => numberOfPages += value);
@@ -28,13 +32,36 @@ export const AuthProvider = ({ children }) => {
                 setUserData(accesses);
 
                 localStorage.setItem('jwtToken', data.token);
-                localStorage.setItem('access', JSON.stringify(accesses));
-                localStorage.setItem('stockId', data.stocks[0].stockId); // !
+                localStorage.setItem('access', JSON.stringify(accesses));               
+
+                let allStocks = await StockService.getListOfStocks();
+                sessionStorage.setItem('allStocks', JSON.stringify(allStocks));
+
+                if (availableStocks.length === 0) {
+                    localStorage.setItem('employeeStocks', JSON.stringify(allStocks));
+                }
+                else {
+                    let result = [];
+                    for (let i = 0; i < availableStocks.length; i++) {
+                        result.push({ value: availableStocks[i].stockId, label: availableStocks[i].stockName });
+                    }
+
+                    if (availableStocks.length === 1) {
+                        localStorage.setItem('employeeStocks', JSON.stringify(result));
+                    }
+                    else {
+                        localStorage.setItem('employeeStocks', JSON.stringify(result));
+                    }
+                }
+
+                const decoded = jwt_decode(data.token);
+                let currentEmployee = await EmployeeService.getDataByEmployeeId(decoded.EmployeeId);
+                localStorage.setItem('positionId', currentEmployee.employeeData.positionId);
 
                 callback();
             }
             else {
-                alert("Отметка о посещении был проставлена или же сотрудник уволен.");
+                alert('Отметка о посещении был проставлена или же сотрудник уволен.');
                 // some actions
             }
         }
@@ -53,7 +80,8 @@ export const AuthProvider = ({ children }) => {
 
         localStorage.removeItem('jwtToken');
         localStorage.removeItem('access');
-        localStorage.removeItem('stockId');
+        localStorage.removeItem('employeeStocks');
+        localStorage.removeItem('positionId');
 
         callback();
     }

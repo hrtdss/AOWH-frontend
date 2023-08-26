@@ -5,14 +5,15 @@ export const EmployeeService = {
     getListOfEmployees,
     getDataByEmployeeId,
     addEmployee,
-    editEmployee
+    editEmployee,
+    terminateEmployee
 };
 
-const stocks = JSON?.parse(sessionStorage.getItem('stocks'));
+const allStocks = JSON?.parse(sessionStorage.getItem('allStocks'));
 
 async function getListOfEmployees() {
     try {
-        const response = await AxiosInstance.get('/Employee')
+        const response = await AxiosInstance.get('/Employee');
 
         if (response.status !== 200) {
             throw new Error(`Ошибка: ${response.status}`);
@@ -32,13 +33,20 @@ async function getListOfEmployees() {
 
 async function getDataByEmployeeId(employeeId) {
     try {
-        const response = await AxiosInstance.get(`/Employee/${employeeId}`)
+        const response = await AxiosInstance.get(`/Employee/${employeeId}`);
 
         if (response.status !== 200) {
             throw new Error(`Ошибка: ${response.status}`);
         }
         
         const data = response.data;
+
+        const stocks = data.stocks;
+        let result = [];
+
+        for (let stock of stocks) {
+            result.push({ value: stock.stockId, label: stock.stockName });
+        }
 
         const requiredData = {
             password: data.password,
@@ -56,7 +64,7 @@ async function getDataByEmployeeId(employeeId) {
             salary: data.salary,
             quarterlyBonus: data.position.quarterlyBonus,
             link: data.link,
-            stocks: `[${data.stocks[0].stockId}]`, // ! fix
+            stocks: result,
             forkliftControl: data.forkliftControl,
             rolleyesControl: data.rolleyesControl,
             percentageOfSalaryInAdvance: data.percentageOfSalaryInAdvance,
@@ -87,13 +95,22 @@ async function addEmployee(values) {
 
         const data = response.data;
 
-        const index = stocks.findIndex(value => value.stockId === parseInt(data.stocks.replace(/[^0-9]+/g, "")));
-        const newValue = { employeeId: data.employeeId, 
-                            name: data.name, 
-                            surname: data.surname, 
-                            patronymic: data.patronymic, 
-                            stocks: [stocks[index]], 
-                            link: data.link };
+        const stocks = JSON.parse(data.stocks);
+        let result = [];
+
+        for (let stock of stocks) {
+            const index = allStocks.findIndex(data => data.value === stock);
+            result.push({ stockId: allStocks[index].value, stockName: allStocks[index].label });
+        }
+
+        const newValue = { 
+            employeeId: data.employeeId, 
+            name: data.name, 
+            surname: data.surname, 
+            patronymic: data.patronymic, 
+            stocks: result, 
+            link: data.link 
+        };
         
         return newValue;
     }
@@ -117,14 +134,23 @@ async function editEmployee(employeeId, values) {
 
         const data = response.data;
 
-        const index = stocks.findIndex(value => value.stockId === parseInt(data.stocks.replace(/[^0-9]+/g, "")));
-        const newValue = { employeeId: data.employeeId, 
-                            name: data.name, 
-                            surname: data.surname, 
-                            patronymic: data.patronymic, 
-                            stocks: [stocks[index]], 
-                            link: data.link };
-        
+        const stocks = JSON.parse(data.stocks);
+        let result = [];
+
+        for (let stock of stocks) {
+            const index = allStocks.findIndex(data => data.value === stock);
+            result.push({ stockId: allStocks[index].value, stockName: allStocks[index].label });
+        }
+
+        const newValue = { 
+            employeeId: data.employeeId, 
+            name: data.name, 
+            surname: data.surname, 
+            patronymic: data.patronymic, 
+            stocks: result, 
+            link: data.link 
+        };
+
         return newValue;
     }
     catch (error) {
@@ -137,3 +163,22 @@ async function editEmployee(employeeId, values) {
     }
 }
 
+async function terminateEmployee(employeeId, values) {
+    try {
+        const response = await AxiosInstance.delete(`/Employee/${employeeId}`, { data: values });
+
+        if (response.status !== 200) {
+            throw new Error(`Ошибка: ${response.status}`);
+        }
+
+        return true;
+    }
+    catch (error) {
+        if (!error?.response) {
+            console.log('Сервер не отвечает.');
+        } 
+        else {
+            console.log('Запрос был прерван:', error);
+        }
+    }
+}

@@ -18,9 +18,9 @@ async function getListOfStocks() {
 
         let data = await response.data;
 
-        let result = [];
+        let result = []; // { value: '', label: 'Все' }
         for (let i = 0; i < data.length; i++) {
-            result.push({ stockId: data[i].id, stockName: data[i].fullTitle });
+            result.push({ value: data[i].id, label: data[i].fullTitle });
         }
 
         return result;

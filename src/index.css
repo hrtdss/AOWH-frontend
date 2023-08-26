@@ -16,20 +16,30 @@
   -moz-appearance: textfield;
 }
 
-input[type="date"] {
+input[type='date'] {
   position: relative;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: auto;
-  height: auto;
-  color: transparent;
+input[type='date']::-webkit-calendar-picker-indicator {
   background: transparent;
+}
+
+input[type='datetime-local']::-webkit-calendar-picker-indicator {
+  background: transparent;
+}
+
+input[type='month']::-webkit-calendar-picker-indicator {
+  background: transparent;
+}
+
+input[type='time'] {
+  font-size: 18px;
+  text-align: center;
+}
+
+input[type='time']::-webkit-calendar-picker-indicator {
+  display: none;
+  background: none; 
 }
 
 body {

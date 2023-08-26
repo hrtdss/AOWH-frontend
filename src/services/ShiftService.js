@@ -4,14 +4,37 @@ import AxiosInstance from './AxiosInstance';
 export const ShiftService = {
     getListOfOpenShifts,
     openShift,
-    closeShift,
-    // editCurrentShift,
-    // editPastShift,
+    editShift,
+    closeShift    
 };
 
 async function getListOfOpenShifts(stockId) {
     try {
-        const response = await AxiosInstance.get(`/Shift/get/${stockId}`)
+        const response = await AxiosInstance.get(`/Shift/get/${stockId}`);
+
+        if (response.status !== 200) {
+            throw new Error(`Ошибка: ${response.status}`);
+        }
+
+        return response.data;
+    }
+    catch (error) {
+        if (!error?.response) {
+            console.log('Сервер не отвечает.');
+        } 
+        else {
+            if (error.response.status === 500) {
+                return 'Смена не найдена';
+            }
+
+            console.log('Запрос был прерван:', error.message);
+        }
+    }   
+}
+
+async function openShift(values) {
+    try {
+        const response = await AxiosInstance.post('/Shift/open', values);
 
         if (response.status !== 200) {
             throw new Error(`Ошибка: ${response.status}`);
@@ -26,18 +49,18 @@ async function getListOfOpenShifts(stockId) {
         else {
             console.log('Запрос был прерван:', error.message);
         }
-    }   
+    }
 }
 
-async function openShift(values) {
+async function editShift(shiftId, values) {
     try {
-        const response = await AxiosInstance.post('/Shift/open', values)
+        const response = await AxiosInstance.put(`/Shift/${shiftId}`, values);
 
         if (response.status !== 200) {
             throw new Error(`Ошибка: ${response.status}`);
         }
 
-        return response.data;
+        return true;
     }
     catch (error) {
         if (!error?.response) {
@@ -51,7 +74,7 @@ async function openShift(values) {
 
 async function closeShift(values) {
     try {
-        const response = await AxiosInstance.post('/Shift/close', values)
+        const response = await AxiosInstance.post('/Shift/close', values);
 
         if (response.status !== 200) {
             throw new Error(`Ошибка: ${response.status}`);

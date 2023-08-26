@@ -14,17 +14,17 @@ const LoginPage = () => {
     // const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = async event => {
-        event.preventDefault();
+    const handleSubmit = async e => {
+        e.preventDefault();
         signIn(password, () => navigate(fromPage, {replace: true}));
     }
 
     return (
         <div className='flex items-center h-screen p-4'>
             <div className='flex flex-col items-center mx-auto'>
-                <h1 className='uppercase font-bold text-center text-4xl xl:text-5xl'>u need to log in</h1>
+                <h1 className='uppercase font-bold text-center text-2xl xl:text-5xl'>Идентификатор</h1>
 
-                <form className='p-6' onSubmit={handleSubmit}>
+                <form className='p-8' onSubmit={handleSubmit}>
                     {/* <div className='mb-4'>
                         <label className='block text-gray-700 text-sm font-bold mb-2'>
                             Login
@@ -33,14 +33,14 @@ const LoginPage = () => {
                     </div> */}
 
                     <div className='mb-6'>
-                        <label className='block text-sm font-bold mb-2'>
+                        {/* <label className='block text-sm font-bold mb-2'>
                             Password
-                        </label>
+                        </label> */}
                         <input type='password' className='w-full py-2 px-3 leading-tight shadow border rounded' value={password} onChange={e => setPassword(e.target.value)} required />
                     </div>
 
                     <div className='text-center'>
-                        <button className='px-4 py-2 font-semibold bg-white border border-gray-400 rounded-md shadow'>
+                        <button className='px-4 py-2 font-semibold bg-gray-100 border border-gray-300 rounded-md'>
                             Log In
                         </button>
                     </div>

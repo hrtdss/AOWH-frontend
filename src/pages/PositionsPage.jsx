@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 
 import { PositionService } from '../services/PositionService';
 
@@ -9,9 +9,12 @@ import PositionEdit from '../components/Positions/PositionEdit';
 
 let selectedPositionData;
 
-const PositionsPage = () => {    
-    const [modalAddActive, setModalAddActive] = useState(false);
-    const [modalEditActive, setModalEditActive] = useState(false);
+const PositionsPage = () => {
+    const [, updateState] = useState();
+    const forceUpdate = useCallback(() => updateState({}), []);
+
+    const [isModalAddActive, setIsModalAddActive] = useState(false);
+    const [isModalEditActive, setIsModalEditActive] = useState(false);
     
     const [rows, setRows] = useState([]);
     
@@ -23,7 +26,7 @@ const PositionsPage = () => {
         if (positions) {
             let positionsData = [];
             for (let position of positions) {
-                let data = await PositionService.getDataAboutPosition(position.positionId);
+                let data = await PositionService.getDataAboutPosition(position.value);
                 positionsData.push(data);
             }
 
@@ -45,15 +48,28 @@ const PositionsPage = () => {
         }
     }, [newVal])
 
-    const handleClick = e => {
+    const handleEditClick = e => {
         selectedPositionData = e.currentTarget.getAttribute('data-value'); 
-        setModalEditActive(true);
+        setIsModalEditActive(true);
+    };  
+
+    const handleDeleteClick = e => {
+        selectedPositionData = JSON.parse(e.currentTarget.getAttribute('data-value')); 
+
+        const positionId = selectedPositionData.data.positionId;
+
+        let data = PositionService.deletePosition(positionId);
+
+        if (data) {
+            rows.splice(selectedPositionData.index, 1);
+            forceUpdate();
+        }
     };  
 
     return (
         <div className='flex flex-col items-center h-full max-w-[1300px] mx-auto my-8 font-ttnorms text-[#2c3e50]'>
             <div className='flex justify-center w-full mb-4'>
-                <button className='py-2 px-3 font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md' onClick={() => setModalAddActive(true)}>
+                <button className='py-2 px-3 font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md select-none' onClick={() => setIsModalAddActive(true)}>
                     Добавить
                 </button>
             </div>
@@ -102,13 +118,22 @@ const PositionsPage = () => {
                                     </ul>
                                 </td>
                                 <td className='px-4 py-[6px] border-b-2 border-l-2'>
-                                    <div className="flex items-center justify-center">
-                                        <button className='py-2 px-3 font-normal text-white bg-orange-400 hover:bg-orange-500 rounded-md' data-value={JSON.stringify(data)} onClick={handleClick}>
+                                    <div className='flex items-center justify-center'>
+                                        <button className='py-2 px-3 font-normal text-white bg-orange-400 hover:bg-orange-500 rounded-md select-none' data-value={JSON.stringify(data)} onClick={handleEditClick}>
                                             Изменить
                                         </button>
-                                        {/* // <button className='bg-red-600 hover:bg-red-800 text-white font-normal ml-4 py-2 px-3 rounded-md'>
-                                        //     Удалить
-                                        // </button> */}
+                                        {/* <button className='ml-4 py-2 px-3 font-normal text-white bg-red-600 hover:bg-red-700 rounded-md select-none' data-value={JSON.stringify({data, index})} onClick={handleDeleteClick}>
+                                            Удалить
+                                        </button> */}
+                                        <button 
+                                            className='ml-4 py-2 px-3 font-normal text-white bg-red-600 hover:bg-red-700 rounded-md select-none' 
+                                            data-value={JSON.stringify({data, index})}
+                                            onClick={(e) => {
+                                                const confirmBox = window.confirm('Вы уверены, что все данные внесены корректно?');
+                                                return confirmBox && handleDeleteClick(e) 
+                                            }}>
+                                            Удалить
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -117,12 +142,12 @@ const PositionsPage = () => {
                 </tbody>
             </table>
             
-            {modalAddActive && <Modal setActive={setModalAddActive}>
-                <PositionAdd setActive={setModalAddActive} addValue={setNewVal}/>
+            {isModalAddActive && <Modal setActive={setIsModalAddActive}>
+                <PositionAdd setActive={setIsModalAddActive} addValue={setNewVal}/>
             </Modal>}
 
-            {modalEditActive && <Modal setActive={setModalEditActive}>
-                <PositionEdit rowData={selectedPositionData} setActive={setModalEditActive} changeValue={setNewVal}/>
+            {isModalEditActive && <Modal setActive={setIsModalEditActive}>
+                <PositionEdit rowData={selectedPositionData} setActive={setIsModalEditActive} changeValue={setNewVal}/>
             </Modal>}
         </div>
     )

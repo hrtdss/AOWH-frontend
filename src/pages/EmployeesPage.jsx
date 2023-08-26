@@ -1,30 +1,38 @@
 import { useEffect, useState } from 'react';
 import { GoTriangleUp, GoTriangleDown } from 'react-icons/go';
+import Select from 'react-select';
 
+import { ADMINISTRATOR, SELECT_STYLE } from '../services/Constants';
 import { EmployeeService } from '../services/EmployeeService';
-import { StockService } from '../services/StockService';
 
 import Modal from '../components/Modal';
 import EmployeeAdd from '../components/Employees/EmployeeAdd';
 import EmployeeEdit from '../components/Employees/EmployeeEdit';
+import EmployeeTerminate from '../components/Employees/EmployeeTerminate';
 
 
 let selectedEmployeeData;
 
 const EmployeesPage = () => {
-    const [modalAddActive, setModalAddActive] = useState(false);
-    const [modalEditActive, setModalEditActive] = useState(false);
+    const [isModalAddActive, setIsModalAddActive] = useState(false);
+    const [isModalEditActive, setIsModalEditActive] = useState(false);
+    const [isModalTerminationActive,setIsModalTerminationActive] = useState(false);
 
-    // const [selectedStock, setSelectedStock] = useState('');
-    // const [selectedStockLink, setSelectedStockLink] = useState('');
-    const [stocks, setStocks] = useState(JSON?.parse(sessionStorage.getItem('stocks'))); // []   
-    // const [stockLinks, setStockLinks] = useState([]);
+    const [stocks, setStocks] = useState(JSON?.parse(localStorage.getItem('employeeStocks'))); 
+    const [links, ] = useState([
+        { value: '', label: 'Все' },
+        { value: 'Дневная', label: 'Дневная' },
+        { value: 'Ночная', label: 'Ночная' }
+    ]);
+
+    const [selectedStock, setSelectedStock] = useState(stocks.length >= 2 ? {value: '', label: 'Все'} : stocks[0]);
+    const [selectedLink, setSelectedLink] = useState(links[0]);
 
     const [rows, setRows] = useState([]);
 
     const [newVal, setNewVal] = useState([]);
 
-    const [search, setSearch] = useState('');
+    const [employeeSearch, setEmployeeSearch] = useState('');
     const [order, setOrder] = useState('');
 
     const sortColumn = column => {
@@ -51,7 +59,24 @@ const EmployeesPage = () => {
         let data = await EmployeeService.getListOfEmployees();
 
         if (data) {
-            setRows(data);
+            if (stocks.length >= 2) { 
+                setStocks([{value: '', label: 'Все'}, ...stocks]);
+            }
+            
+            const userPositionId = localStorage.getItem('positionId');
+            if (userPositionId === ADMINISTRATOR) {
+                setRows(data);
+                return;
+            }
+
+            let result = [];
+            for (let value of data) {
+                if (value.stocks.some(dataStock => stocks.some(stock => stock.value === dataStock.stockId))) {
+                    result.push(value);
+                }
+            }
+
+            setRows(result);
         }
     }
 
@@ -74,70 +99,43 @@ const EmployeesPage = () => {
             getTableOfEmployees();
         }
     }, [newVal])
-
-    useEffect(() => {
-        let storageContent = sessionStorage.getItem('stocks');
-
-        if (!storageContent) {
-            let list = StockService.getListOfStocks();
-            list.then(data => {
-                sessionStorage.setItem('stocks', JSON.stringify(data));
-                setStocks(data);
-            });
-        }
-    }, [stocks])
-
-    const handleClick = async e => {
-        const employeeId = e.currentTarget.getAttribute("data-value"); 
+    
+    const handleEditClick = async e => {
+        const employeeId = e.currentTarget.getAttribute('data-value'); 
 
         selectedEmployeeData = await EmployeeService.getDataByEmployeeId(employeeId);
 
-        setModalEditActive(true);
+        setIsModalEditActive(true);
     };
+
+    const handleTerminationClick = e => {
+        const employeeId = e.currentTarget.getAttribute('data-value'); 
+
+        selectedEmployeeData = employeeId;
+
+        setIsModalTerminationActive(true);
+    };  
 
     return (
         <div className='flex flex-col items-center h-full max-w-[1300px] mx-auto my-8 font-ttnorms text-[#2c3e50]'>
             <div className='flex items-center justify-between w-full mb-4'>
-                {/* value={selectedStock} onChange={e => setSelectedStock(e.target.value)} */}
-                <select name='stock' className='h-[34px] py-1 px-2 shadow-sm border rounded'>
-                    <option value=''></option>
-                    {
-                        stocks?.map((data, index) =>
-                            <option key={index} value={data.stockId}>
-                                {data.stockName}
-                            </option>
-                        )
-                    }
-                </select>
+                <div className='inline-flex'> 
+                    {stocks &&
+                    <div className='w-[290px] py-1 px-2'>
+                        <Select defaultValue={selectedStock} styles={SELECT_STYLE} options={stocks} onChange={setSelectedStock}/>
+                    </div>}
 
-                {/* <select name='link' className='w-[204px] h-[34px] py-1 px-2 shadow-sm border rounded'>
-                    <option value=''></option>
-                    {
-                        links?.map((data, index) =>
-                            <option key={index} value={data}>
-                                {data}
-                            </option>
-                        )
-                    }
-                </select> */}
-                
-                {/* <input list='stock' name='stock' placeholder='Выбрать склад' className='max-w-[204px] py-1 px-3 shadow border rounded'/>
-                <datalist id='stock'>
-                    {
-                        stocks?.map((data, index) =>
-                            <option key={index}>
-                                {data.stockName}
-                            </option>
-                        )
-                    }
-                </datalist> */}
+                    <div className='w-[150px] py-1 px-2'>
+                        <Select defaultValue={selectedLink} styles={SELECT_STYLE} options={links} onChange={setSelectedLink}/>
+                    </div>
+                </div>
 
-                <button className='px-3 py-2 font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md' onClick={() => setModalAddActive(true)}>
-                    Добавить
-                </button>
+                <div className='py-1 px-2'>
+                    <button className='mx-2 px-3 py-2 font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md select-none' onClick={() => setIsModalAddActive(true)}>
+                        Добавить
+                    </button>
+                </div>
             </div>
-
-            {/* <p className='mb-4'>Выбранный склад: {selectedStock} <br/> Выбранное звено: {selectedStockLink}</p> */}
 
             <table className='block max-w-[95%] overflow-auto mb-1 border-x-2 border-t-2 rounded-md whitespace-nowrap'>
                 <thead className='bg-slate-300'>
@@ -152,10 +150,10 @@ const EmployeesPage = () => {
                             Склад
                         </th>
                         <th className='px-4 py-2 border-b-2 border-l-2'>
-                            Звено
+                            Смена
                         </th>
                         <th className='px-4 py-2 border-b-2 border-l-2'>
-                            <input placeholder='Поиск по сотрудникам' className='px-3 py-1 rounded-md' onChange={e => setSearch(e.target.value)}/> 
+                            <input placeholder='Поиск по сотрудникам' className='px-3 py-1 rounded-md' onChange={e => setEmployeeSearch(e.target.value)}/> 
                         </th>
                     </tr>
                 </thead>
@@ -164,9 +162,19 @@ const EmployeesPage = () => {
                     {
                         rows
                         ?.filter(data => {
-                            return data.surname.toLowerCase().includes(search.toLowerCase()) ||
-                                    data.name.toLowerCase().includes(search.toLowerCase()) ||
-                                    data.patronymic.toLowerCase().includes(search.toLowerCase());
+                            return data.surname.toLowerCase().includes(employeeSearch.toLowerCase()) ||
+                                    data.name.toLowerCase().includes(employeeSearch.toLowerCase()) ||
+                                    data.patronymic.toLowerCase().includes(employeeSearch.toLowerCase());
+                        })
+                        ?.filter(data => {
+                            if (selectedStock.label === 'Все') {
+                                return data;
+                            }
+
+                            return data.stocks.some(stock => stock.stockId === selectedStock.value) && data;
+                        })
+                        ?.filter(data => {
+                            return selectedLink.label === 'Все' ? data : data.link === selectedLink.label;
                         })
                         ?.map((data, index) => (
                             <tr key={index} className='hover:bg-slate-200'>
@@ -188,13 +196,15 @@ const EmployeesPage = () => {
                                     {data.link}
                                 </td>
                                 <td className='px-4 py-[6px] border-b-2 border-l-2'>
-                                    <div className="flex items-center justify-center">
-                                        <button className='py-2 px-3 font-normal text-white bg-orange-400 hover:bg-orange-500 rounded-md' data-value={data.employeeId} onClick={handleClick}>
+                                    <div className='flex items-center justify-center'>
+                                        <button className='py-2 px-3 font-normal text-white bg-orange-400 hover:bg-orange-500 rounded-md select-none' data-value={data.employeeId} onClick={handleEditClick}>
                                             Изменить
                                         </button>
-                                        {/* <button className='bg-red-600 hover:bg-red-800 text-white font-normal ml-4 py-2 px-3 rounded-md'>
+
+                                        {!data.dateOfTermination &&
+                                        <button className='ml-4 py-2 px-3 font-normal text-white bg-red-600 hover:bg-red-700 rounded-md select-none' data-value={data.employeeId} onClick={handleTerminationClick}>
                                             Уволить
-                                        </button> */}
+                                        </button>}
                                     </div>
                                 </td>
                             </tr>
@@ -203,12 +213,16 @@ const EmployeesPage = () => {
                 </tbody>
             </table>
 
-            {modalAddActive && <Modal setActive={setModalAddActive}>
-                <EmployeeAdd setActive={setModalAddActive} addValue={setNewVal}/>
+            {isModalAddActive && <Modal setActive={setIsModalAddActive}>
+                <EmployeeAdd setActive={setIsModalAddActive} addValue={setNewVal}/>
             </Modal>}
 
-            {modalEditActive && <Modal setActive={setModalEditActive}>
-                <EmployeeEdit rowData={selectedEmployeeData} setActive={setModalEditActive} changeValue={setNewVal}/>
+            {isModalEditActive && <Modal setActive={setIsModalEditActive}>
+                <EmployeeEdit rowData={selectedEmployeeData} setActive={setIsModalEditActive} changeValue={setNewVal}/>
+            </Modal>}
+
+            {isModalTerminationActive && <Modal setActive={setIsModalTerminationActive}>
+                <EmployeeTerminate employeeId={selectedEmployeeData} setActive={setIsModalTerminationActive}/>
             </Modal>}
         </div>
     )

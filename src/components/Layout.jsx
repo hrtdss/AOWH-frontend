@@ -19,7 +19,7 @@ const Layout = () => {
     Object.values(userData).forEach(value => numberOfPages += value);
 
     return (
-        <div className='flex flex-col h-screen'>
+        <div className='flex flex-col h-screen max-h-screen'>
             <header>
                 <div className='flex justify-between items-center h-20 max-w-[1340px] mx-auto px-4 font-ttnorms font-medium uppercase text-[#2c3e50] shadow-md rounded-b-2xl'>
                     <NavLink to='/AOWH-frontend' className='flex text-base/5 text-left items-center uppercase text-[#2c3e50]'>
@@ -35,7 +35,7 @@ const Layout = () => {
                         {userData?.employeeCard && 
                         <li className='p-4 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
                             <NavLink to='employeeCard' className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] drop-shadow-sm shadow-[#808080] border-x-2 border-[#ffc107] ease duration-300' : ''}>
-                                Карточка сотрудника
+                                Список сотрудников
                             </NavLink>
                         </li>}
 
@@ -77,7 +77,7 @@ const Layout = () => {
                             {userData?.employeeCard && 
                             <li className='p-4 border-t border-gray-600 active:text-[#ffc107] active:drop-shadow-sm active:shadow-[#808080]'>
                                 <NavLink to='employeeCard' onClick={closeNav} className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] border-x-2 border-[#ffc107]' : ''}>
-                                    Карточка сотрудника
+                                    Список сотрудников
                                 </NavLink>
                             </li>}
 
@@ -112,7 +112,9 @@ const Layout = () => {
                     </div>
                 </div>
             </header>
-
+            
+            {/* max-h-[calc()] */}
+            {/* h-[calc(964px-160px)] */}
             <main className={!nav ? 'flex-grow' : 'flex-grow overflow-hidden'}>
                 <Outlet/>
             </main>
@@ -125,7 +127,7 @@ const Layout = () => {
                     </div>
 
                     <div className='text-center mr-4'>
-                        <button className='flex px-4 py-2 font-semibold bg-gray-100 border border-gray-400 rounded-md shadow' onClick={() => signOut(() => navigate('/AOWH-frontend/login', {replace: true}))}>
+                        <button className='px-4 py-2 font-semibold bg-gray-100 border border-gray-300 rounded-md' onClick={() => signOut(() => navigate('/AOWH-frontend/login', {replace: true}))}>
                             Log Out
                         </button>
                     </div>

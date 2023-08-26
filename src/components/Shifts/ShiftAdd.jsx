@@ -50,7 +50,7 @@ const ShiftAdd = ({ setActive, addValue }) => {
     }
 
     useEffect(() => {
-        getListOfEmployees();
+        // getListOfEmployees();
     }, []); 
 
     // useEffect(() => {
@@ -84,7 +84,9 @@ const ShiftAdd = ({ setActive, addValue }) => {
     // }, [valueFlags]);
 
     // const handleBlur = e => {
-    //     setValueFlags({...valueFlags, [e.target.name]: {...valueFlags[e.target.name], isDirty: true}});
+    //     if (!valueFlags[e.target.name].isDirty) {
+    //         setValueFlags({...valueFlags, [e.target.name]: {...valueFlags[e.target.name], isDirty: true}});
+    //     }
     // }
 
     // const handleChange = e => {

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { PositionService } from '../../services/PositionService';
 
@@ -7,10 +7,16 @@ const PositionEdit = ({ rowData, setActive, changeValue }) => {
     const [, updateState] = useState();
     const forceUpdate = useCallback(() => updateState({}), []);
 
+    const [numberOfEmptyFields, setNumberOfEmptyFields] = useState(0);
     const [isErrorActive, setIsErrorActive] = useState(false);
     
     const [values, setValues] = useState(JSON.parse(rowData));
-    const [nameFlag, setNameFlags] = useState({ isDirty: false, isEmpty: false });
+
+    const [valueFlags, setValueFlags] = useState({
+        name: { isDirty: false, isEmpty: false },
+        salary: { isDirty: false, isEmpty: false },
+        quarterlyBonus: { isDirty: false, isEmpty: false }
+    });
 
     async function editPosition() {
         let data = PositionService.editPosition(values);
@@ -21,8 +27,21 @@ const PositionEdit = ({ rowData, setActive, changeValue }) => {
         }
     }
 
-    const handleBlur = () => {
-        setNameFlags({...nameFlag, isDirty: true});
+    useEffect(() => {
+        let numberOfUnfilled = 0;
+        Object.values(valueFlags).forEach(value => numberOfUnfilled += value.isEmpty);
+        
+        setNumberOfEmptyFields(numberOfUnfilled);
+
+        if (numberOfUnfilled === 0) {
+            setIsErrorActive(false);
+        }
+    }, [valueFlags]);
+
+    const handleBlur = e => {
+        if (!valueFlags[e.target.name].isDirty) {
+            setValueFlags({...valueFlags, [e.target.name]: {...valueFlags[e.target.name], isDirty: true}});
+        }
     }
 
     const handleChange = e => {
@@ -36,16 +55,25 @@ const PositionEdit = ({ rowData, setActive, changeValue }) => {
             setValues({...values, [e.target.name]: e.target.value});
         }
 
-        if (e.target.name === 'name') { 
-            setNameFlags({...nameFlag, isEmpty: e.target.value ? false : true});
+        if (valueFlags.hasOwnProperty(e.target.name)) {
+            let isEmpty = e.target.value ? false : true;
+            let recorderValue = values[e.target.name];
 
-            (isErrorActive && e.target.value) && setIsErrorActive(false);
+            if (isEmpty || (!isEmpty && !recorderValue)) {
+                setValueFlags({...valueFlags, [e.target.name]: {...valueFlags[e.target.name], isEmpty: isEmpty}});
+            }
         }
     }
 
     const handleClick = () => {
-        if (nameFlag.isDirty && nameFlag.isEmpty) {
-            setIsErrorActive(true);
+        if (numberOfEmptyFields !== 0) {
+            Object.values(valueFlags).forEach(value => {
+                if (!value.isDirty && value.isEmpty) {
+                    value.isDirty = true; 
+                }
+            });
+
+            !isErrorActive && setIsErrorActive(true);
             forceUpdate();
         }
         else {
@@ -63,21 +91,21 @@ const PositionEdit = ({ rowData, setActive, changeValue }) => {
                         <label className='block mb-1 font-bold'>
                             Название
                         </label>
-                        <input name='name' className={`w-full py-2 px-3 leading-tight shadow border ${(nameFlag.isDirty && nameFlag.isEmpty) && 'border-red-500'} rounded`} defaultValue={values.name} onChange={handleChange} onBlur={handleBlur}/>
+                        <input name='name' className={`w-full py-2 px-3 leading-tight shadow border ${(valueFlags.name.isDirty && valueFlags.name.isEmpty) && 'border-red-500'} rounded`} defaultValue={values.name} onChange={handleChange} onBlur={handleBlur}/>
                     </div>
 
                     <div className='mb-3'>
                         <label className='block mb-1 font-bold'>
                             Оклад
                         </label>
-                        <input type='number' name='salary' className='remove-arrow w-full py-2 px-3 leading-tight shadow border rounded' defaultValue={values.salary} onChange={handleChange}/>
+                        <input type='number' name='salary' className={`remove-arrow w-full py-2 px-3 leading-tight shadow border ${(valueFlags.salary.isDirty && valueFlags.salary.isEmpty) && 'border-red-500'} rounded`} defaultValue={values.salary} onChange={handleChange} onBlur={handleBlur}/>
                     </div>
 
                     <div className='mb-3'>
                         <label className='block mb-1 font-bold'>
                             Квартальная премия
                         </label>
-                        <input type='number' name='quarterlyBonus' className='remove-arrow w-full py-2 px-3 leading-tight shadow border rounded' defaultValue={values.quarterlyBonus} onChange={handleChange}/>
+                        <input type='number' name='quarterlyBonus' className={`remove-arrow w-full py-2 px-3 leading-tight shadow border ${(valueFlags.quarterlyBonus.isDirty && valueFlags.quarterlyBonus.isEmpty) && 'border-red-500'} rounded`} defaultValue={values.quarterlyBonus} onChange={handleChange} onBlur={handleBlur}/>
                     </div>
                 </div>
 
@@ -88,23 +116,23 @@ const PositionEdit = ({ rowData, setActive, changeValue }) => {
 
                     <div> 
                         <div className='flex items-center mb-2'>
-                            <input type='checkbox' name='employeeCard' className='w-5 h-5 bg-gray-100 border-gray-300 rounded' defaultChecked={values.interfaceAccesses.employeeCard && true} onChange={handleChange}/>
+                            <input type='checkbox' name='employeeCard' className='w-5 h-5 bg-gray-100 border-gray-300 rounded' defaultChecked={values.interfaceAccesses.employeeCard} onChange={handleChange}/>
                             <label className='ml-2'>Карточка сотрудника</label>
                         </div>
                         <div className='flex items-center mb-2'>
-                            <input type='checkbox' name='positionDirectory' className='w-5 h-5 bg-gray-100 border-gray-300 rounded' defaultChecked={values.interfaceAccesses.positionDirectory && true} onChange={handleChange}/>
+                            <input type='checkbox' name='positionDirectory' className='w-5 h-5 bg-gray-100 border-gray-300 rounded' defaultChecked={values.interfaceAccesses.positionDirectory} onChange={handleChange}/>
                             <label className='ml-2'>Список должностей</label>
                         </div>
                         <div className='flex items-center mb-2'>
-                            <input type='checkbox' name='changes' className='w-5 h-5 bg-gray-100 border-gray-300 rounded' defaultChecked={values.interfaceAccesses.changes && true} onChange={handleChange}/>
+                            <input type='checkbox' name='changes' className='w-5 h-5 bg-gray-100 border-gray-300 rounded' defaultChecked={values.interfaceAccesses.changes} onChange={handleChange}/>
                             <label className='ml-2'>Смены</label>
                         </div>
                         <div className='flex items-center mb-2'>
-                            <input type='checkbox' name='visitSchedule' className='w-5 h-5 bg-gray-100 border-gray-300 rounded' defaultChecked={values.interfaceAccesses.visitSchedule && true} onChange={handleChange}/>
+                            <input type='checkbox' name='visitSchedule' className='w-5 h-5 bg-gray-100 border-gray-300 rounded' defaultChecked={values.interfaceAccesses.visitSchedule} onChange={handleChange}/>
                             <label className='ml-2'>Посещения</label>
                         </div>
                         <div className='flex items-center mb-2'>
-                            <input type='checkbox' name='accounting' className='w-5 h-5 bg-gray-100 border-gray-300 rounded' defaultChecked={values.interfaceAccesses.accounting && true} onChange={handleChange}/>
+                            <input type='checkbox' name='accounting' className='w-5 h-5 bg-gray-100 border-gray-300 rounded' defaultChecked={values.interfaceAccesses.accounting} onChange={handleChange}/>
                             <label className='ml-2'>Учет</label>
                         </div>
                     </div>
@@ -112,11 +140,11 @@ const PositionEdit = ({ rowData, setActive, changeValue }) => {
             </div>
 
             <div className='flex flex-row-reverse items-center justify-between mt-3 whitespace-normal'>
-                <button className='px-3 py-2 font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md' onClick={handleClick}>
+                <button className='px-3 py-2 font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md select-none' onClick={handleClick}>
                     Сохранить
                 </button>
 
-                {isErrorActive && <div className='font-bold text-red-500'>Поле с названием не может быть пустым!</div>}
+                {isErrorActive && <div className='font-bold text-red-500'>Ошибка. Заполнены не все поля!</div>}
             </div>
         </div>
     )

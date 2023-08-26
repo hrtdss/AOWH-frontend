@@ -26,7 +26,8 @@ AxiosInstance.interceptors.response.use(config => {
         if (error.response.data === 'Invalid refresh token') {
             localStorage.removeItem('access');
             localStorage.removeItem('jwtToken');
-            localStorage.removeItem('stockId');
+            localStorage.removeItem('employeeStocks');
+            localStorage.removeItem('positionId');
 
             return window.location = '/AOWH-frontend/login';
         }
