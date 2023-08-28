@@ -11,8 +11,6 @@ import EmployeeEdit from '../components/Employees/EmployeeEdit';
 import EmployeeTerminate from '../components/Employees/EmployeeTerminate';
 
 
-let selectedEmployeeData;
-
 const EmployeesPage = () => {
     const [isModalAddActive, setIsModalAddActive] = useState(false);
     const [isModalEditActive, setIsModalEditActive] = useState(false);
@@ -30,6 +28,7 @@ const EmployeesPage = () => {
 
     const [rows, setRows] = useState([]);
 
+    const [selectedEmployeeData, setSelectedEmployeeData] = useState('');
     const [newVal, setNewVal] = useState([]);
 
     const [employeeSearch, setEmployeeSearch] = useState('');
@@ -103,7 +102,8 @@ const EmployeesPage = () => {
     const handleEditClick = async e => {
         const employeeId = e.currentTarget.getAttribute('data-value'); 
 
-        selectedEmployeeData = await EmployeeService.getDataByEmployeeId(employeeId);
+        const employeeData = await EmployeeService.getDataByEmployeeId(employeeId);
+        setSelectedEmployeeData(employeeData);
 
         setIsModalEditActive(true);
     };
@@ -111,7 +111,7 @@ const EmployeesPage = () => {
     const handleTerminationClick = e => {
         const employeeId = e.currentTarget.getAttribute('data-value'); 
 
-        selectedEmployeeData = employeeId;
+        setSelectedEmployeeData(employeeId);
 
         setIsModalTerminationActive(true);
     };  

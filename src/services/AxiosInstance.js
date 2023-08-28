@@ -29,7 +29,7 @@ AxiosInstance.interceptors.response.use(config => {
             localStorage.removeItem('employeeStocks');
             localStorage.removeItem('positionId');
 
-            return window.location = '/AOWH-frontend/login';
+            return window.location = '/AOWH-frontend';
         }
         else {
             try {

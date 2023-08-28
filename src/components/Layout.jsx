@@ -16,20 +16,16 @@ const Layout = () => {
     const navigate = useNavigate();
 
     let numberOfPages = 0;   
-    Object.values(userData).forEach(value => numberOfPages += value);
+    userData && Object.values(userData).forEach(value => numberOfPages += value);
 
     return (
         <div className='flex flex-col h-screen max-h-screen'>
             <header>
                 <div className='flex justify-between items-center h-20 max-w-[1340px] mx-auto px-4 font-ttnorms font-medium uppercase text-[#2c3e50] shadow-md rounded-b-2xl'>
-                    <NavLink to='/AOWH-frontend' className='flex text-base/5 text-left items-center uppercase text-[#2c3e50]'>
+                    <NavLink to='/AOWH-frontend' className='flex text-base/5 text-left items-center uppercase'>
                         <img className='h-16' src={Logo} alt='header logo'/>
-                        <span>Ежедневная срочная<br/>доставка груза</span> {/* className='drop-shadow shadow-[#808080]' */}
+                        <span>Ежедневная срочная<br/>доставка груза</span>
                     </NavLink>
-                    {/* <div className='flex items-center text-base/5 text-left'> 
-                        <img className='h-16' src={Logo} alt='header logo'/>
-                        <span>Ежедневная срочная<br/>доставка груза</span> 
-                    </div> */}
 
                     <ul className='hidden md:flex items-center text-base'>
                         {userData?.employeeCard && 
@@ -120,14 +116,14 @@ const Layout = () => {
             </main>
             
             <footer>
-                <div className='flex justify-between items-center h-20 max-w-[1340px] mx-auto px-4 shadow-mdt rounded-t-2xl'>
-                    <div className='flex items-center font-ttnorms font-medium uppercase text-[#2c3e50] text-base/5 text-left'>
+                <div className='flex justify-between items-center h-20 max-w-[1340px] mx-auto px-4 text-[#2c3e50] shadow-mdt rounded-t-2xl'>
+                    <div className='flex items-center font-ttnorms font-medium uppercase text-base/5 text-left'>
                         <img className='h-16 grayscale z-[-1]' src={Logo} alt='footer logo'/>
                         <span>Транспортная компания <br/> &copy; 2023 «ЛУЧ»</span>
                     </div>
 
                     <div className='text-center mr-4'>
-                        <button className='px-4 py-2 font-semibold bg-gray-100 border border-gray-300 rounded-md' onClick={() => signOut(() => navigate('/AOWH-frontend/login', {replace: true}))}>
+                        <button className='px-4 py-2 font-semibold bg-gray-100 border border-gray-300 rounded-md select-none' onClick={() => signOut(() => navigate('/AOWH-frontend', {replace: true}))}>
                             Log Out
                         </button>
                     </div>

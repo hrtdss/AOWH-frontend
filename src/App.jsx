@@ -16,29 +16,44 @@ import ErrorPage from './pages/ErrorPage';
 function App() {
     return (
         // <Routes>
-        //     <Route path='login' element={<LoginPage/>}/>
+        //     <Route path='/AOWH-frontend/login' element={<LoginPage/>}/>
 
-        //     <Route element={<RequireAuth/>}>
-        //         <Route path='/' element={<Layout/>}>
+        //     <Route element={<RequireAuth allowedPages={['employeeCard', 'positionDirectory', 'changes', 'visitSchedule', 'accounting']}/>}>
+        //         <Route path='/AOWH-frontend/' element={<Layout/>}>
         //             <Route index element={<HomePage/>}/>
-        //             <Route path='employeeCard' element={<EmployeesPage/>}/>
-        //             <Route path='positions' element={<PositionsPage/>}/>
-        //             <Route path='shifts' element={<ShiftsPage/>}/>
-        //             <Route path='attendance' element={<AttendancePage/>}/>
-        //             <Route path='accounting' element={<AccountingPage/>}/>
+
+        //             <Route element={<RequireAuth allowedPages={['employeeCard']}/>}>
+        //                 <Route path='employeeCard' element={<EmployeesPage/>}/>
+        //             </Route>
+
+        //             <Route element={<RequireAuth allowedPages={['positionDirectory']}/>}>
+        //                 <Route path='positions' element={<PositionsPage/>}/>
+        //             </Route>
+                    
+        //             <Route element={<RequireAuth allowedPages={['changes']}/>}>
+        //                 <Route path='shifts' element={<ShiftsPage/>}/>
+        //             </Route>
+
+        //             <Route element={<RequireAuth allowedPages={['visitSchedule']}/>}>
+        //                 <Route path='attendance' element={<AttendancePage/>}/>
+        //             </Route>
+
+        //             <Route element={<RequireAuth allowedPages={['accounting']}/>}>
+        //                 <Route path='accounting' element={<AccountingPage/>}/>
+        //             </Route>
         //         </Route>
         //     </Route>
 
-        //     <Route path='*' element={<ErrorPage/>}/>
+        //     <Route path='/AOWH-frontend/*' element={<ErrorPage/>}/>
         // </Routes>
 
         <Routes>
-            <Route path='/AOWH-frontend/login' element={<LoginPage/>}/>
+            {/* <Route path='/AOWH-frontend/login' element={<LoginPage/>}/> */}
 
-            <Route element={<RequireAuth allowedPages={['employeeCard', 'positionDirectory', 'changes', 'visitSchedule', 'accounting']}/>}>
-                <Route path='/AOWH-frontend/' element={<Layout/>}>
-                    <Route index element={<HomePage/>}/>
+            <Route path='/AOWH-frontend/' element={<Layout/>}>
+                <Route index element={<HomePage/>}/>
 
+                <Route element={<RequireAuth allowedPages={['employeeCard', 'positionDirectory', 'changes', 'visitSchedule', 'accounting']}/>}>
                     <Route element={<RequireAuth allowedPages={['employeeCard']}/>}>
                         <Route path='employeeCard' element={<EmployeesPage/>}/>
                     </Route>

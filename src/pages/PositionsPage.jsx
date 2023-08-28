@@ -7,17 +7,16 @@ import PositionAdd from '../components/Positions/PositionAdd';
 import PositionEdit from '../components/Positions/PositionEdit';
 
 
-let selectedPositionData;
-
 const PositionsPage = () => {
     const [, updateState] = useState();
     const forceUpdate = useCallback(() => updateState({}), []);
 
     const [isModalAddActive, setIsModalAddActive] = useState(false);
     const [isModalEditActive, setIsModalEditActive] = useState(false);
-    
+
     const [rows, setRows] = useState([]);
     
+    const [selectedPositionData, setSelectedPositionData] = useState('');
     const [newVal, setNewVal] = useState([]);
 
     async function getTableOfPositions() {
@@ -49,19 +48,19 @@ const PositionsPage = () => {
     }, [newVal])
 
     const handleEditClick = e => {
-        selectedPositionData = e.currentTarget.getAttribute('data-value'); 
+        const positionData = e.currentTarget.getAttribute('data-value')
+        setSelectedPositionData(positionData);
+
         setIsModalEditActive(true);
     };  
 
-    const handleDeleteClick = e => {
-        selectedPositionData = JSON.parse(e.currentTarget.getAttribute('data-value')); 
+    const handleDeleteClick = async e => {
+        const selectedPosition = JSON.parse(e.currentTarget.getAttribute('data-value'));
 
-        const positionId = selectedPositionData.data.positionId;
-
-        let data = PositionService.deletePosition(positionId);
+        const data = await PositionService.deletePosition(selectedPosition.data.positionId);
 
         if (data) {
-            rows.splice(selectedPositionData.index, 1);
+            rows.splice(selectedPosition.index, 1);
             forceUpdate();
         }
     };  
@@ -129,7 +128,7 @@ const PositionsPage = () => {
                                             className='ml-4 py-2 px-3 font-normal text-white bg-red-600 hover:bg-red-700 rounded-md select-none' 
                                             data-value={JSON.stringify({data, index})}
                                             onClick={(e) => {
-                                                const confirmBox = window.confirm('Вы уверены, что все данные внесены корректно?');
+                                                const confirmBox = window.confirm('Вы уверены, что хотите удалить выбранную должность?');
                                                 return confirmBox && handleDeleteClick(e) 
                                             }}>
                                             Удалить

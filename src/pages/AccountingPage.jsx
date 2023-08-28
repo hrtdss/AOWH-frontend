@@ -91,10 +91,10 @@ const AccountingPage = () => {
                             Заработная <br/> плата за смену
                         </th>
                         <th className='px-4 py-1 text-center border-b-2 border-l-2'>
-                            Надбавка за <br/> наставничество
+                            Надбавка за <br/> стаж
                         </th>
                         <th className='px-4 py-1 text-center border-b-2 border-l-2'>
-                            Надбавка за <br/> стаж
+                            Надбавка за <br/> наставничество
                         </th>
                         <th className='px-4 py-1 text-center border-b-2 border-l-2'>
                             Надбавка за <br/> обучение
@@ -159,10 +159,10 @@ const AccountingPage = () => {
                                     {data.salaryForShift.toFixed(2)}
                                 </td>
                                 <td className='px-4 py-[6px] border-b-2 border-l-2'>
-                                    {data.mentoring}
+                                    {data.seniority}
                                 </td>
                                 <td className='px-4 py-[6px] border-b-2 border-l-2'>
-                                    {data.seniority}
+                                    {data.mentoring}
                                 </td>
                                 <td className='px-4 py-[6px] border-b-2 border-l-2'>
                                     {data.teaching}

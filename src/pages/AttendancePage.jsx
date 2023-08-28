@@ -157,26 +157,28 @@ const AttendancePage = () => {
                                 <td className='px-4 py-[6px] border-b-2 border-l-2'>
                                     {data.positionName}
                                 </td>
-                                <td className='px-4 py-[6px] border-b-2 border-l-2'>
-                                    {data.dayShifts.numberOfShifts}
+                                <td className='px-4 py-[6px] text-center border-b-2 border-l-2'>
+                                    {/* {data.dayShifts.numberOfShifts} */}
+                                    {`${data.dayShifts.numberOfShifts} / ${data.dayShifts.planForNumberOfShifts}`} 
                                 </td>
-                                <td className='px-4 py-[6px] border-b-2 border-l-2'>
+                                <td className='px-4 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.dayShifts.numberOfHours}
                                 </td>
-                                <td className='px-4 py-[6px] border-b-2 border-l-2'>
-                                    {data.nightShits.numberOfShifts}
+                                <td className='px-4 py-[6px] text-center border-b-2 border-l-2'>
+                                    {/* {data.nightShits.numberOfShifts} */}
+                                    {`${data.nightShits.numberOfShifts} / ${data.nightShits.planForNumberOfShifts}`}
                                 </td>
-                                <td className='px-4 py-[6px] border-b-2 border-l-2'>
+                                <td className='px-4 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.nightShits.numberOfHours}
                                 </td>
                                 {
                                     data.shifts.map((shiftData, shiftIndex) => (
                                         (shiftIndex + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
                                         <>
-                                            <td className='px-4 py-[6px] border-b-2 border-l-2'>
+                                            <td className='px-4 py-[6px] text-center border-b-2 border-l-2'>
                                                 {(shiftIndex + 1 === shiftData.day && shiftData.dayOrNight === 'Дневная') ? shiftData.workedHours : '-'}
                                             </td>
-                                            <td className='px-4 py-[6px] border-b-2 border-l-2'>
+                                            <td className='px-4 py-[6px] text-center border-b-2 border-l-2'>
                                                 {(shiftIndex + 1 === shiftData.day && shiftData.dayOrNight === 'Ночная') ? shiftData.workedHours : '-'}
                                             </td>
                                         </>

@@ -139,6 +139,11 @@ async function deletePosition(positionId) {
             console.log('Сервер не отвечает.');
         }
         else {
+            if (error.response.status === 400) {
+                alert(error.response.data);
+                return false;
+            } 
+            
             console.log('Запрос был прерван:', error.message);
         }
     }
