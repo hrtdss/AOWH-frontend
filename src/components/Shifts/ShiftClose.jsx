@@ -141,7 +141,7 @@ const ShiftClose = ({ shiftData, setActive }) => {
                                     </td>
                                     <td className='px-2 py-[4px] border-b-2 border-l-2'>
                                         <div className='flex items-center justify-center'>
-                                            <input type='time' name={data.employeeId} className={`w-[80px] py-1 px-1 shadow-sm border ${(isErrorActive && employeeTimes[data.employeeId] === '') && 'border-red-500'} rounded`} value={employeeTimes[data.employeeId]} onChange={handleChange}/>
+                                            <input type='time' name={data.employeeId} className={`w-[80px] py-1 px-1 shadow-sm border ${(isErrorActive && employeeTimes[data.employeeId] === '') && 'border-red-500'} rounded`} value={employeeTimes && employeeTimes[data.employeeId]} onChange={handleChange}/>
                                         </div>
                                     </td>
                                 </tr>

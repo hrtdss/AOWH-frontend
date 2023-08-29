@@ -67,6 +67,15 @@ const AttendancePage = () => {
         }
     }
 
+    const handleCellClick = (shiftData, cellDayOrNight) => {
+        if (cellDayOrNight !== shiftData.dayOrNight || shiftData.workedHours === 0) {
+            return;
+        }
+        else {
+            console.log(shiftData.penalty, shiftData.penaltyComment, shiftData.send, shiftData.sendComment);
+        }
+    }
+
     return (
         <div className='flex flex-col items-center h-full max-w-[1300px] mx-auto my-8 font-ttnorms text-[#2c3e50]'>
             <div className='flex items-center justify-between w-full mb-4'>  
@@ -98,7 +107,7 @@ const AttendancePage = () => {
                 Информация за указанный месяц и год отсутствует
             </div> : 
             rows.length > 0 &&
-            <table className='block max-w-[95%] overflow-auto mb-1 border-x-2 border-t-2 rounded-md whitespace-nowrap'>
+            <table className='block max-w-[95%] overflow-auto mb-1 border-x-2 border-t-2 rounded-md whitespace-nowrap select-none'>
                 <thead className='bg-slate-300'>
                     <tr className='text-base/5 text-left'>
                         <th rowSpan={2} className='px-4 py-1 border-b-2'>
@@ -133,10 +142,10 @@ const AttendancePage = () => {
                             columnsWithDaysOfMonth.map((_, index) => (
                                 (index + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
                                 <>
-                                    <th key={index} className='px-4 py-1 text-center border-b-2 border-l-2'>
+                                    <th key={index + 1} className='px-4 py-1 text-center border-b-2 border-l-2'>
                                         Д
                                     </th>
-                                    <th className='px-4 py-1 text-center border-b-2 border-l-2'>
+                                    <th key={-(index + 1)} className='px-4 py-1 text-center border-b-2 border-l-2'>
                                         Н
                                     </th>
                                 </>
@@ -175,10 +184,10 @@ const AttendancePage = () => {
                                     data.shifts.map((shiftData, shiftIndex) => (
                                         (shiftIndex + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
                                         <>
-                                            <td className='px-4 py-[6px] text-center border-b-2 border-l-2'>
+                                            <td key={shiftIndex + 1} className='px-4 py-[6px] text-center border-b-2 border-l-2' onClick={() => handleCellClick(shiftData, 'Дневная')}> 
                                                 {(shiftIndex + 1 === shiftData.day && shiftData.dayOrNight === 'Дневная') ? shiftData.workedHours : '-'}
                                             </td>
-                                            <td className='px-4 py-[6px] text-center border-b-2 border-l-2'>
+                                            <td key={-(shiftIndex + 1)} className='px-4 py-[6px] text-center border-b-2 border-l-2' onClick={() => handleCellClick(shiftData, 'Ночная')}>
                                                 {(shiftIndex + 1 === shiftData.day && shiftData.dayOrNight === 'Ночная') ? shiftData.workedHours : '-'}
                                             </td>
                                         </>

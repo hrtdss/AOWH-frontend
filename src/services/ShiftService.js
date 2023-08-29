@@ -5,7 +5,8 @@ export const ShiftService = {
     getListOfOpenShifts,
     openShift,
     editShift,
-    closeShift    
+    closeShift,
+    setCommentsForShift
 };
 
 async function getListOfOpenShifts(stockId) {
@@ -75,6 +76,26 @@ async function editShift(shiftId, values) {
 async function closeShift(values) {
     try {
         const response = await AxiosInstance.post('/Shift/close', values);
+
+        if (response.status !== 200) {
+            throw new Error(`Ошибка: ${response.status}`);
+        }
+
+        return true;
+    }
+    catch (error) {
+        if (!error?.response) {
+            console.log('Сервер не отвечает.');
+        } 
+        else {
+            console.log('Запрос был прерван:', error.message);
+        }
+    }
+}
+
+async function setCommentsForShift(shiftInfoId, values) {
+    try {
+        const response = await AxiosInstance.post(`/Shift/${shiftInfoId}`, values);
 
         if (response.status !== 200) {
             throw new Error(`Ошибка: ${response.status}`);

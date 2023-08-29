@@ -58,6 +58,8 @@ export const AuthProvider = ({ children }) => {
                 let currentEmployee = await EmployeeService.getDataByEmployeeId(decoded.EmployeeId);
                 localStorage.setItem('positionId', currentEmployee.employeeData.positionId);
 
+                window.location.reload(); // ! remove
+
                 callback();
             }
             else {

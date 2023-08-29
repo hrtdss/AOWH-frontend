@@ -16,13 +16,6 @@ async function getAttendance(selectedMonth, values) {
         }
 
         const data = await response.data;
-        // let data;
-        // if (values.month === 8) {
-        //     data = [{"employee": {"fullName": "Лобанов Марк Артемьевич", "positionName": "Кладовщик"}, "shifts": [{"day": 19, "dayOrNight": "Дневная", "workedHours": 9}, {"day": 25, "dayOrNight": "Дневная", "workedHours": 6}]}, {"employee": {"fullName": "Глебов Олег Егорович", "positionName": "Грузчик"}, "shifts": [{"day": 14, "dayOrNight": "Дневная", "workedHours": 7}]}, {"employee": {"fullName": "Кравцов Владислав Демидович", "positionName": "Грузчик"}, "shifts": [{"day": 1, "dayOrNight": "Дневная", "workedHours": 7}, {"day": 2, "dayOrNight": "Ночная", "workedHours": 9}, {"day": 4, "dayOrNight": "Дневная", "workedHours": 7}, {"day": 5, "dayOrNight": "Дневная", "workedHours": 5}, {"day": 7, "dayOrNight": "Дневная", "workedHours": 5}, {"day": 8, "dayOrNight": "Ночная", "workedHours": 10}, {"day": 14, "dayOrNight": "Дневная", "workedHours": 7}, {"day": 15, "dayOrNight": "Ночная", "workedHours": 7}, {"day": 16, "dayOrNight": "Ночная", "workedHours": 0}, {"day": 17, "dayOrNight": "Дневная", "workedHours": 9}, {"day": 23, "dayOrNight": "Ночная", "workedHours": 7}, {"day": 19, "dayOrNight": "Ночная", "workedHours": 9}, {"day": 20, "dayOrNight": "Дневная", "workedHours": 8}, {"day": 23, "dayOrNight": "Ночная", "workedHours": 7}, {"day": 24, "dayOrNight": "Ночная", "workedHours": 9}]}];
-        // }
-        // else {
-        //     data = [{"employee": {"fullName": "Лобанов Марк Артемьевич", "positionName": "Кладовщик"}, "shifts": [{"day": 19, "dayOrNight": "Дневная", "workedHours": 9}, {"day": 25, "dayOrNight": "Дневная", "workedHours": 6}]}, {"employee": {"fullName": "Глебов Олег Егорович", "positionName": "Грузчик"}, "shifts": [{"day": 14, "dayOrNight": "Дневная", "workedHours": 7}, {"day": 29, "dayOrNight": "Ночная", "workedHours": 6}]}, {"employee": {"fullName": "Долгов Дамир Витальевич", "positionName": "Грузчик"}, "shifts": []}, {"employee": {"fullName": "Кравцов Владислав Демидович", "positionName": "Грузчик"}, "shifts": [{"day": 1, "dayOrNight": "Дневная", "workedHours": 7}, {"day": 2, "dayOrNight": "Ночная", "workedHours": 9}, {"day": 4, "dayOrNight": "Дневная", "workedHours": 7}, {"day": 5, "dayOrNight": "Дневная", "workedHours": 5}, {"day": 14, "dayOrNight": "Дневная", "workedHours": 7}, {"day": 15, "dayOrNight": "Ночная", "workedHours": 7}, {"day": 16, "dayOrNight": "Ночная", "workedHours": 0}, {"day": 17, "dayOrNight": "Дневная", "workedHours": 9}, {"day": 20, "dayOrNight": "Дневная", "workedHours": 8}, {"day": 23, "dayOrNight": "Ночная", "workedHours": 7}, {"day": 24, "dayOrNight": "Ночная", "workedHours": 9}, {"day": 29, "dayOrNight": "Ночная", "workedHours": 6}]}];
-        // }
 
         if (data.length === 0) {
             return '';
@@ -44,9 +37,14 @@ async function getAttendance(selectedMonth, values) {
 
             value.shifts.forEach(shift => {
                 shifts[shift.day - 1] = {
+                    shiftInfoId: shift.shiftId,
                     day: shift.day,
                     dayOrNight: shift.dayOrNight,
-                    workedHours: shift.workedHours
+                    workedHours: shift.workedHours,
+                    penalty: shift.penalty,
+                    penaltyComment: shift.penaltyComment,
+                    send: shift.send,
+                    sendComment: shift.sendComment
                 }
 
                 if (shift.dayOrNight === 'Дневная') {
