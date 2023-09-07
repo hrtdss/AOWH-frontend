@@ -2,19 +2,21 @@ import { useEffect, useState } from 'react';
 import { GoTriangleUp, GoTriangleDown } from 'react-icons/go';
 import Select from 'react-select';
 
-import { ADMINISTRATOR, SELECT_STYLE } from '../services/Constants';
+import { SELECT_STYLE } from '../services/Constants';
 import { EmployeeService } from '../services/EmployeeService';
 
 import Modal from '../components/Modal';
 import EmployeeAdd from '../components/Employees/EmployeeAdd';
 import EmployeeEdit from '../components/Employees/EmployeeEdit';
 import EmployeeTerminate from '../components/Employees/EmployeeTerminate';
+import EmployeeRestore from '../components/Employees/EmployeeRestore';
 
 
 const EmployeesPage = () => {
     const [isModalAddActive, setIsModalAddActive] = useState(false);
     const [isModalEditActive, setIsModalEditActive] = useState(false);
     const [isModalTerminationActive,setIsModalTerminationActive] = useState(false);
+    const [isModalRestoreActive,setIsModalRestoreActive] = useState(false);
 
     const [stocks, setStocks] = useState(JSON?.parse(localStorage.getItem('employeeStocks'))); 
     const [links, ] = useState([
@@ -55,27 +57,14 @@ const EmployeesPage = () => {
     }
 
     async function getTableOfEmployees() {
-        let data = await EmployeeService.getListOfEmployees();
+        const data = await EmployeeService.getListOfEmployees();
 
         if (data) {
             if (stocks.length >= 2) { 
                 setStocks([{value: '', label: 'Все'}, ...stocks]);
             }
-            
-            const userPositionId = localStorage.getItem('positionId');
-            if (userPositionId === ADMINISTRATOR) {
-                setRows(data);
-                return;
-            }
 
-            let result = [];
-            for (let value of data) {
-                if (value.stocks.some(dataStock => stocks.some(stock => stock.value === dataStock.stockId))) {
-                    result.push(value);
-                }
-            }
-
-            setRows(result);
+            setRows(data);
         }
     }
 
@@ -114,7 +103,16 @@ const EmployeesPage = () => {
         setSelectedEmployeeData(employeeId);
 
         setIsModalTerminationActive(true);
-    };  
+    };
+
+    const handleRestoreClick = async e => {
+        const employeeId = e.currentTarget.getAttribute('data-value'); 
+
+        const employeeData = await EmployeeService.getDataByEmployeeId(employeeId);
+        setSelectedEmployeeData(employeeData);
+
+        setIsModalRestoreActive(true);
+    };
 
     return (
         <div className='flex flex-col items-center h-full max-w-[1300px] mx-auto my-8 font-ttnorms text-[#2c3e50]'>
@@ -153,7 +151,7 @@ const EmployeesPage = () => {
                             Смена
                         </th>
                         <th className='px-4 py-2 border-b-2 border-l-2'>
-                            <input placeholder='Поиск по сотрудникам' className='px-3 py-1 rounded-md' onChange={e => setEmployeeSearch(e.target.value)}/> 
+                            <input placeholder='Поиск по сотрудникам' className='px-3 py-1 font-normal rounded-md' onChange={e => setEmployeeSearch(e.target.value)}/> 
                         </th>
                     </tr>
                 </thead>
@@ -179,7 +177,14 @@ const EmployeesPage = () => {
                         ?.map((data, index) => (
                             <tr key={index} className='hover:bg-slate-200'>
                                 <td className='px-4 py-[6px] border-b-2'>
-                                    {`${data.surname} ${data.name} ${data.patronymic}`}
+                                    {!data.dateOfTermination ?
+                                    `${data.surname} ${data.name} ${data.patronymic}` :
+                                    <div className='flex flex-row items-center justify-between'>
+                                        {`${data.surname} ${data.name} ${data.patronymic}`}
+                                        <div className='ml-10 font-bold text-red-600 select-none'>
+                                            Уволен
+                                        </div>
+                                    </div>}
                                 </td>
                                 <td className='px-4 py-[6px] border-b-2 border-l-2'>
                                     {
@@ -196,16 +201,20 @@ const EmployeesPage = () => {
                                     {data.link}
                                 </td>
                                 <td className='px-4 py-[6px] border-b-2 border-l-2'>
+                                    {!data.dateOfTermination ?
                                     <div className='flex items-center justify-center'>
-                                        <button className='py-2 px-3 font-normal text-white bg-orange-400 hover:bg-orange-500 rounded-md select-none' data-value={data.employeeId} onClick={handleEditClick}>
+                                        <button id='edit' className='py-2 px-3 font-normal text-white bg-orange-400 hover:bg-orange-500 rounded-md select-none' data-value={data.employeeId} onClick={handleEditClick}>
                                             Изменить
                                         </button>
-
-                                        {!data.dateOfTermination &&
                                         <button className='ml-4 py-2 px-3 font-normal text-white bg-red-600 hover:bg-red-700 rounded-md select-none' data-value={data.employeeId} onClick={handleTerminationClick}>
                                             Уволить
-                                        </button>}
-                                    </div>
+                                        </button>
+                                    </div> :
+                                    <div className='flex items-center justify-center'>
+                                        <button id='restore' className='w-full py-2 px-3 font-normal text-white bg-orange-400 hover:bg-orange-500 rounded-md select-none' data-value={data.employeeId} onClick={handleRestoreClick}>
+                                            Восстановить
+                                        </button>
+                                    </div>}
                                 </td>
                             </tr>
                         ))
@@ -213,16 +222,20 @@ const EmployeesPage = () => {
                 </tbody>
             </table>
 
-            {isModalAddActive && <Modal setActive={setIsModalAddActive}>
+            {isModalAddActive && <Modal setActive={setIsModalAddActive} modalHeader={'Добавление сотрудника'}>
                 <EmployeeAdd setActive={setIsModalAddActive} addValue={setNewVal}/>
             </Modal>}
 
-            {isModalEditActive && <Modal setActive={setIsModalEditActive}>
+            {isModalEditActive && <Modal setActive={setIsModalEditActive} modalHeader={'Редактирование личных данных сотрудника'}>
                 <EmployeeEdit rowData={selectedEmployeeData} setActive={setIsModalEditActive} changeValue={setNewVal}/>
             </Modal>}
 
-            {isModalTerminationActive && <Modal setActive={setIsModalTerminationActive}>
+            {isModalTerminationActive && <Modal setActive={setIsModalTerminationActive} modalHeader={'Увольнение сотрудника'}>
                 <EmployeeTerminate employeeId={selectedEmployeeData} setActive={setIsModalTerminationActive}/>
+            </Modal>}
+
+            {isModalRestoreActive && <Modal setActive={setIsModalRestoreActive} modalHeader={'Восстановление сотрудника'}>
+                <EmployeeRestore rowData={selectedEmployeeData} setActive={setIsModalRestoreActive} changeValue={setNewVal}/>
             </Modal>}
         </div>
     )

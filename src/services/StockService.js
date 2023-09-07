@@ -16,9 +16,9 @@ async function getListOfStocks() {
             throw new Error(`Ошибка: ${response.status}`);
         }
 
-        let data = await response.data;
+        const data = await response.data;
 
-        let result = []; // { value: '', label: 'Все' }
+        const result = [];
         for (let i = 0; i < data.length; i++) {
             result.push({ value: data[i].id, label: data[i].fullTitle });
         }

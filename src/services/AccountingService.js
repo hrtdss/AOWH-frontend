@@ -5,6 +5,8 @@ export const AccountingService = {
     getAccounting
 };
 
+const allStocks = JSON?.parse(sessionStorage.getItem('allStocks'));
+
 async function getAccounting(year, month, stockId) {
     try {
         const response = await AxiosInstance.get('/Accounting', { params: { year: year, month: month, stockId: stockId } });
@@ -13,6 +15,16 @@ async function getAccounting(year, month, stockId) {
             throw new Error(`Ошибка: ${response.status}`);
         }
 
+        const index = allStocks.findIndex(data => data.value === stockId);
+
+        const accounting = {
+            stock: allStocks[index],
+            date: [year, month],
+            data: response.data
+        };
+
+        localStorage.setItem('savedAccounting', JSON.stringify(accounting));
+        
         return response.data;
     }
     catch (error) {

@@ -94,8 +94,6 @@ const PositionAdd = ({ setActive, addValue }) => {
 
     return (
         <div className='text-base text-[#2c3e50] whitespace-nowrap'>
-            <h2 className='flex mb-4 pl-1 pb-2 text-xl border-b border-[#2c3e50] border-opacity-10'>Добавление должности</h2>
-
             <div className='grid grid-rows-3 grid-flow-col gap-2'>
                 <div className='row-span-3'>
                     <div className='mb-3'>

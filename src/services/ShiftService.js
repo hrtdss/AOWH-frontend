@@ -3,6 +3,7 @@ import AxiosInstance from './AxiosInstance';
 
 export const ShiftService = {
     getListOfOpenShifts,
+    getPastShifts,
     openShift,
     editShift,
     closeShift,
@@ -11,26 +12,68 @@ export const ShiftService = {
 
 async function getListOfOpenShifts(stockId) {
     try {
-        const response = await AxiosInstance.get(`/Shift/get/${stockId}`);
+        const response = await AxiosInstance.get(`/Shift/${stockId}`);
 
         if (response.status !== 200) {
             throw new Error(`Ошибка: ${response.status}`);
         }
 
-        return response.data;
+        const data = response.data;
+
+        return {
+            value: {
+                shiftId: data.shiftId,
+                dayOrNight: data.dayOrNight,
+                employees: data.employees
+            },
+            label: `${data.dayOrNight} -- ${data.openingDateAndTime} -- ...` 
+        };
     }
     catch (error) {
         if (!error?.response) {
             console.log('Сервер не отвечает.');
         } 
         else {
-            if (error.response.status === 500) {
+            if (error.response.status === 400) {
                 return 'Смена не найдена';
             }
 
             console.log('Запрос был прерван:', error.message);
         }
     }   
+}
+
+async function getPastShifts(stockId) {
+    try {
+        const response = await AxiosInstance.get(`/Shift/past/${stockId}`);
+
+        if (response.status !== 200) {
+            throw new Error(`Ошибка: ${response.status}`);
+        }
+
+        const data = response.data;
+
+        const result = [];
+        for (let value of data) {
+            result.push({ 
+                value: { 
+                    dayOrNight: value.dayOrNight,
+                    employees: value.employees
+                },
+                label: `${value.dayOrNight} -- ${value.openingDateAndTime} -- ${value.closingDateAndTime}` 
+            });
+        }
+
+        return result;
+    }
+    catch (error) {
+        if (!error?.response) {
+            console.log('Сервер не отвечает.');
+        } 
+        else {
+            console.log('Запрос был прерван:', error.message);
+        }
+    }
 }
 
 async function openShift(values) {

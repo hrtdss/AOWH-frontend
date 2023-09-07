@@ -24,12 +24,9 @@ AxiosInstance.interceptors.response.use(config => {
 
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
         if (error.response.data === 'Invalid refresh token') {
-            localStorage.removeItem('access');
-            localStorage.removeItem('jwtToken');
-            localStorage.removeItem('employeeStocks');
-            localStorage.removeItem('positionId');
+            localStorage.clear();
 
-            return window.location = '/AOWH-frontend';
+            return window.location = '/AOWH-frontend/login';
         }
         else {
             try {
@@ -42,7 +39,7 @@ AxiosInstance.interceptors.response.use(config => {
                     return AxiosInstance.request(initialRequest);
                 }
                 else {
-                    console.log('Неудачное обновление токена', response) // !
+                    console.log('Неудачное обновление токена', response)
                 }
             }
             catch (error) {

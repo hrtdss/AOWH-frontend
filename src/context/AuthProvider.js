@@ -34,14 +34,14 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem('jwtToken', data.token);
                 localStorage.setItem('access', JSON.stringify(accesses));               
 
-                let allStocks = await StockService.getListOfStocks();
+                const allStocks = await StockService.getListOfStocks();
                 sessionStorage.setItem('allStocks', JSON.stringify(allStocks));
 
                 if (availableStocks.length === 0) {
                     localStorage.setItem('employeeStocks', JSON.stringify(allStocks));
                 }
                 else {
-                    let result = [];
+                    const result = [];
                     for (let i = 0; i < availableStocks.length; i++) {
                         result.push({ value: availableStocks[i].stockId, label: availableStocks[i].stockName });
                     }
@@ -58,14 +58,10 @@ export const AuthProvider = ({ children }) => {
                 let currentEmployee = await EmployeeService.getDataByEmployeeId(decoded.EmployeeId);
                 localStorage.setItem('positionId', currentEmployee.employeeData.positionId);
 
-                window.location.reload(); // ! remove
-
                 callback();
             }
             else {
-                alert('Отметка о посещении была успешно проставлена.');
-                // alert('Отметка о посещении была проставлена или же сотрудник уволен.');
-                // some actions
+                alert(`${data.fullName} \nОтметка прошла успешно!`);
             }
         }
         catch (error) {
@@ -81,10 +77,7 @@ export const AuthProvider = ({ children }) => {
     const signOut = (callback) => {
         setUserData(null);
 
-        localStorage.removeItem('jwtToken');
-        localStorage.removeItem('access');
-        localStorage.removeItem('employeeStocks');
-        localStorage.removeItem('positionId');
+        localStorage.clear();
 
         callback();
     }

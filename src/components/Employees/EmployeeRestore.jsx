@@ -27,7 +27,7 @@ const EmployeeEdit = ({ rowData, setActive, changeValue }) => {
     const [, updateState] = useState();
     const forceUpdate = useCallback(() => updateState({}), []);
 
-    const [numberOfEmptyFields, setNumberOfEmptyFields] = useState(0);
+    const [numberOfEmptyFields, setNumberOfEmptyFields] = useState(3);
     const [isErrorActive, setIsErrorActive] = useState(false);
 
     const [values, setValues] = useState(rowData.employeeData);
@@ -43,10 +43,10 @@ const EmployeeEdit = ({ rowData, setActive, changeValue }) => {
         passportIssueDate: { isDirty: false, isEmpty: false },
         startOfTotalSeniority: { isDirty: false, isEmpty: false },
         startOfLuchSeniority: { isDirty: false, isEmpty: false },
-        positionId: { isDirty: false, isEmpty: false },
+        positionId: { isDirty: false, isEmpty: true },
         salary: { isDirty: false, isEmpty: false },
-        stocks: { isDirty: false, isEmpty: false },
-        link: { isDirty: false, isEmpty: false },
+        stocks: { isDirty: false, isEmpty: true },
+        link: { isDirty: false, isEmpty: true },
         percentageOfSalaryInAdvance: { isDirty: false, isEmpty: false }
     });
 
@@ -61,14 +61,16 @@ const EmployeeEdit = ({ rowData, setActive, changeValue }) => {
     ]);
 
     async function getPositions() {
-        let data = await PositionService.getListOfPositions('edit');
+        let data = await PositionService.getListOfPositions('restore');
 
         if (data) {
             setPositions(data);
         }
     }
 
-    async function editEmployee() {
+    async function restoreEmployee() {
+        values.reasonOfTermination = null;
+
         const selectedStocks = values.stocks;
         const requiredData = [];
 
@@ -88,6 +90,8 @@ const EmployeeEdit = ({ rowData, setActive, changeValue }) => {
         let data = await EmployeeService.editEmployee(rowData.employeeId, values);
 
         if (data) {
+            console.log(data);
+
             changeValue(data);
             setActive(false);
         }
@@ -195,9 +199,6 @@ const EmployeeEdit = ({ rowData, setActive, changeValue }) => {
     }
 
     const handleClick = () => {
-        // if (values.birthday === '0001-01-01') {
-        // }
-
         if (numberOfEmptyFields !== 0) {
             Object.values(valueFlags).forEach(value => {
                 if (!value.isDirty && value.isEmpty) {
@@ -209,8 +210,7 @@ const EmployeeEdit = ({ rowData, setActive, changeValue }) => {
             forceUpdate();
         }
         else {
-            editEmployee();
-            // console.log(values);
+            restoreEmployee();
         }
     }
 
@@ -347,13 +347,25 @@ const EmployeeEdit = ({ rowData, setActive, changeValue }) => {
                             Дата начала <br/> <p className='whitespace-nowrap'>работы в ЛУЧ</p>
                         </label>
                         <input type='date' name='startOfLuchSeniority' className={`min-w-[204px] py-1 px-3 shadow border ${(valueFlags.startOfLuchSeniority.isDirty && valueFlags.startOfLuchSeniority.isEmpty) && 'border-red-500'} rounded`} defaultValue={values.startOfLuchSeniority} onChange={handleChange} onBlur={handleBlur}/>
+                    </div>  
+                    <div className='flex flex-row items-center justify-end mt-3'>
+                        <label className='mr-3'>
+                            Дата увольнения
+                        </label>
+                        <input type='date' name='dateOfTermination' className='min-w-[204px] py-1 px-3 shadow border rounded' defaultValue={values.dateOfTermination} disabled/>
+                    </div>
+                    <div className='mt-3'>
+                        <label className='block text-left ml-1 mb-1'>
+                            Причина увольнения
+                        </label>
+                        <textarea name='reasonOfTermination' className='w-[364px] h-[80px] px-2 py-1 border rounded resize-none' defaultValue={values.reasonOfTermination} disabled/>
                     </div>
                 </div>
             </div>
 
             <div className='flex flex-row-reverse items-center justify-between mt-3'>
                 <button className='px-3 py-2 font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md select-none' onClick={handleClick}>
-                    Сохранить
+                    Восстановить
                 </button>
                 
                 {isErrorActive && <div className='ml-2 font-bold text-red-500'>Ошибка. Заполнены не все поля!</div>}

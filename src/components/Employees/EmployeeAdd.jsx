@@ -7,25 +7,27 @@ import { PositionService } from '../../services/PositionService';
 
 
 const EmployeeAdd = ({ setActive, addValue }) => {
-    const positionSelectStyle = {
-        control: base => ({ ...base, minHeight: '36px', height: '36px', boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)', borderColor: (valueFlags.positionId.isDirty && valueFlags.positionId.isEmpty) && 'rgb(239 68 68)', borderRadius: '4px' }),
-        valueContainer: base => ({ ...base, height: '36px', padding: '0 8px' }),
-        indicatorsContainer: base => ({ ...base, height: '36px' })
-    }
-    const stockSelectStyle = {
-        control: base => ({ ...base, minHeight: '36px', boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)', borderColor: (valueFlags.stock.isDirty && valueFlags.stock.isEmpty) && 'rgb(239 68 68)', borderRadius: '4px' }),
-        valueContainer: base => ({ ...base, minHeight: '36px', padding: '2px 8px' })
-    }
-    const linkSelectStyle = {
-        control: base => ({ ...base, minHeight: '36px', height: '36px', boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)', borderColor: (valueFlags.link.isDirty && valueFlags.link.isEmpty) && 'rgb(239 68 68)', borderRadius: '4px' }),
-        valueContainer: base => ({ ...base, height: '36px', padding: '0 8px' }),
-        indicatorsContainer: base => ({ ...base, height: '36px' })
-    }
+    const [selectStyles, ] = useState({
+        position: {
+            control: base => ({ ...base, minHeight: '36px', height: '36px', boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)', borderColor: (valueFlags.positionId.isDirty && valueFlags.positionId.isEmpty) && 'rgb(239 68 68)', borderRadius: '4px' }),
+            valueContainer: base => ({ ...base, height: '36px', padding: '0 8px' }),
+            indicatorsContainer: base => ({ ...base, height: '36px' })
+        },
+        stock: {
+            control: base => ({ ...base, minHeight: '36px', boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)', borderColor: (valueFlags.stocks.isDirty && valueFlags.stocks.isEmpty) && 'rgb(239 68 68)', borderRadius: '4px' }),
+            valueContainer: base => ({ ...base, minHeight: '36px', padding: '2px 8px' })
+        },
+        link: {
+            control: base => ({ ...base, minHeight: '36px', height: '36px', boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)', borderColor: (valueFlags.link.isDirty && valueFlags.link.isEmpty) && 'rgb(239 68 68)', borderRadius: '4px' }),
+            valueContainer: base => ({ ...base, height: '36px', padding: '0 8px' }),
+            indicatorsContainer: base => ({ ...base, height: '36px' })
+        }
+    })
 
     const [, updateState] = useState();
     const forceUpdate = useCallback(() => updateState({}), []);
 
-    const [numberOfEmptyFields, setNumberOfEmptyFields] = useState(15); // const size = Object.keys(valueFlags).length ?
+    const [numberOfEmptyFields, setNumberOfEmptyFields] = useState(15);
     const [isErrorActive, setIsErrorActive] = useState(false);
 
     const [values, setValues] = useState({
@@ -74,14 +76,14 @@ const EmployeeAdd = ({ setActive, addValue }) => {
     const [selectedPositionIsAdmin, setSelectedPositionIsAdmin] = useState(false);
     const [selectedPositionIsFrManager, setSelectedPositionIsFrManager] = useState(false);
     
-    const [stocks, ] = useState(JSON?.parse(localStorage.getItem('employeeStocks'))); // JSON?.parse(sessionStorage.getItem('stocks2'))
+    const [stocks, ] = useState(JSON?.parse(localStorage.getItem('employeeStocks')));
     const [links, ] = useState([
         { value: 'Дневная', label: 'Дневная' },
         { value: 'Ночная', label: 'Ночная' }
     ]);
     
     async function getPositions() {
-        let data = await PositionService.getListOfPositions();
+        let data = await PositionService.getListOfPositions('add');
 
         if (data) {
             setPositions(data);
@@ -90,7 +92,7 @@ const EmployeeAdd = ({ setActive, addValue }) => {
 
     async function addEmployee() {
         const selectedStocks = values.stock;
-        let requiredData = [];
+        const requiredData = [];
 
         if (Array.isArray(selectedStocks)) {
             for (let stock of selectedStocks) {
@@ -225,39 +227,39 @@ const EmployeeAdd = ({ setActive, addValue }) => {
 
     return (
         <div className='text-base text-[#2c3e50]'>
-            <h2 className='flex mb-4 pl-1 pb-2 text-xl border-b border-[#2c3e50] border-opacity-10'>Добавление сотрудника</h2>
-
             <div className='grid grid-cols-1 grid-rows-4 md:grid-cols-2 md:grid-rows-2 lg:grid-cols-2 lg:grid-rows-2 gap-4'>
                 <div className='flex flex-col justify-center py-5 px-6 text-right shadow-md rounded-lg'>
                     <div className='flex flex-row items-center justify-end'>
                         <label className='mr-3'>
                             Фамилия
                         </label>
-                        <input name='surname' className={`py-1 px-3 shadow border ${(valueFlags.surname.isDirty && valueFlags.surname.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
+                        <input name='surname' className={`w-[254px] py-1 px-3 shadow border ${(valueFlags.surname.isDirty && valueFlags.surname.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
                     </div>
                     <div className='flex flex-row items-center justify-end mt-3'>
                         <label className='mr-3'>
                             Имя
                         </label>
-                        <input name='name' className={`py-1 px-3 shadow border ${(valueFlags.name.isDirty && valueFlags.name.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
+                        <input name='name' className={`w-[254px] py-1 px-3 shadow border ${(valueFlags.name.isDirty && valueFlags.name.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
                     </div>
                     <div className='flex flex-row items-center justify-end mt-3'>
                         <label className='mr-3'>
                             Отчество
                         </label>
-                        <input name='patronymic' className={`py-1 px-3 shadow border ${(valueFlags.patronymic.isDirty && valueFlags.patronymic.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
+                        <input name='patronymic' className={`w-[254px] py-1 px-3 shadow border ${(valueFlags.patronymic.isDirty && valueFlags.patronymic.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
                     </div>
                     <div className='flex flex-row items-center justify-end mt-3'>
                         <label className='mr-3'>
-                            Дата рождения
+                            Должность
                         </label>
-                        <input type='date' name='birthday' className={`min-w-[204px] py-1 px-3 shadow border ${(valueFlags.birthday.isDirty && valueFlags.birthday.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
+                        <div className='w-[254px] text-left'>
+                            <Select placeholder='' maxMenuHeight={168} styles={selectStyles.position} options={positions} onChange={data => handleSelectChange('positionId', data.value)} onBlur={() => handleSelectBlur('positionId')}/>
+                        </div>
                     </div>
                     <div className='flex flex-row items-center justify-end mt-3'>
                         <label className='mr-3'>
                             Пароль
                         </label>
-                        <input type='number' name='password' className={`remove-arrow py-1 px-3 shadow border ${(valueFlags.password.isDirty && valueFlags.password.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
+                        <input type='number' name='password' className={`remove-arrow w-[254px] py-1 px-3 shadow border ${(valueFlags.password.isDirty && valueFlags.password.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
                     </div>
                 </div>
 
@@ -275,29 +277,26 @@ const EmployeeAdd = ({ setActive, addValue }) => {
                         <input name='passportIssuer' className={`py-1 px-3 shadow border ${(valueFlags.passportIssuer.isDirty && valueFlags.passportIssuer.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
                     </div>
                     <div className='flex flex-row items-center justify-end mt-3'>
-                        <label className='mr-3'>
-                            Дата выдачи
+                        <label className='mr-3 leading-5'>
+                            Дата выдачи <br/> паспорта
                         </label>
                         <input type='date' name='passportIssueDate' className={`min-w-[204px] py-1 px-3 shadow border ${(valueFlags.passportIssueDate.isDirty && valueFlags.passportIssueDate.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
+                    </div>
+                    <div className='flex flex-row items-center justify-end mt-3'>
+                        <label className='mr-3'>
+                            Дата рождения
+                        </label>
+                        <input type='date' name='birthday' className={`min-w-[204px] py-1 px-3 shadow border ${(valueFlags.birthday.isDirty && valueFlags.birthday.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
                     </div>
                 </div>
 
                 <div className='flex flex-col justify-center py-5 px-6 text-right shadow-md rounded-lg'>
                     <div className='flex flex-row items-center justify-end'>
                         <label className='mr-3'>
-                            Должность
-                        </label>
-                        <div className='w-[254px] text-left'>
-                            {/* isDisabled={!(selectedPositionIsAdmin || selectedPositionIsFrManager)} */}
-                            <Select placeholder='' maxMenuHeight={168} styles={positionSelectStyle} options={positions} onChange={data => handleSelectChange('positionId', data.value)} onBlur={() => handleSelectBlur('positionId')}/>
-                        </div>
-                    </div>
-                    <div className='flex flex-row items-center justify-end mt-3'>
-                        <label className='mr-3'>
                             Склад
                         </label>
                         <div className='w-[254px] text-left'>
-                            <Select placeholder='' maxMenuHeight={168} styles={stockSelectStyle} options={stocks} value={values.stock} onChange={data => handleSelectChange('stock', data)} onBlur={() => handleSelectBlur('stock')} isDisabled={selectedPositionIsAdmin} isMulti={selectedPositionIsFrManager} closeMenuOnSelect={selectedPositionIsFrManager ? false : true}/>
+                            <Select placeholder='' maxMenuHeight={168} styles={selectStyles.stock} options={stocks} value={values.stock} onChange={data => handleSelectChange('stock', data)} onBlur={() => handleSelectBlur('stock')} isDisabled={selectedPositionIsAdmin} isMulti={selectedPositionIsFrManager} closeMenuOnSelect={selectedPositionIsFrManager ? false : true}/>
                         </div>
                     </div>
                     <div className='flex flex-row items-center justify-end mt-3'>
@@ -305,29 +304,43 @@ const EmployeeAdd = ({ setActive, addValue }) => {
                             Звено
                         </label>
                         <div className='w-[254px] text-left'>
-                            <Select placeholder='' styles={linkSelectStyle} options={links} value={{label : values.link}} onChange={data => handleSelectChange('link', data.value)} onBlur={() => handleSelectBlur('link')} isDisabled={selectedPositionIsAdmin || selectedPositionIsFrManager}/>
+                            <Select placeholder='' styles={selectStyles.link} options={links} value={{label : values.link}} onChange={data => handleSelectChange('link', data.value)} onBlur={() => handleSelectBlur('link')} isDisabled={selectedPositionIsAdmin || selectedPositionIsFrManager}/>
                         </div>                        
                     </div>
                     <div className='flex flex-row items-center justify-end mt-3'>
-                        <div className='mr-3 leading-5'>
-                            Управление <br/> погрузчиком
-                        </div>
-                        <div className='min-w-[254px] flex flex-row items-start'>
-                            <label className='relative inline-block w-11 h-6 rounded-full'>
-                                <input type='checkbox' name='forkliftControl' className='peer opacity-0 w-0 h-0' onClick={handleChange}/>
-                                <span className='absolute cursor-pointer inset-0 bg-gray-300 rounded-full duration-300 before:content-[""] before:absolute before:w-4 before:h-4 before:bottom-1 before:left-1 before:rounded-full before:bg-white before:duration-300 peer-checked:before:translate-x-5 peer-checked:bg-blue-500' />
-                            </label>
-                        </div>
+                        <label className='mr-3'>
+                            Оклад
+                        </label>
+                        <input type='number' name='salary' className={`remove-arrow w-[254px] py-1 px-3 shadow border ${(valueFlags.salary.isDirty && valueFlags.salary.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
                     </div>
                     <div className='flex flex-row items-center justify-end mt-3'>
-                        <div className='mr-3 leading-5'>
-                            Управление <br/> рохлей
+                        <label className='mr-3 leading-5'>
+                            Аванс <br /> <p className='whitespace-nowrap'>(% от оклада)</p>
+                        </label>
+                        <input type='number' name='percentageOfSalaryInAdvance' className={`remove-arrow w-[254px] py-1 px-3 shadow border ${(valueFlags.percentageOfSalaryInAdvance.isDirty && valueFlags.percentageOfSalaryInAdvance.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
+                    </div>
+                    <div className='flex flex-row justify-between mt-3'>
+                        <div className='flex flex-row items-center justify-end pl-5'>
+                            <div className='mr-3 leading-5'>
+                                Управление <br/> погрузчиком
+                            </div>
+                            <div className='flex flex-row items-start'>
+                                <label className='relative inline-block w-11 h-6 rounded-full'>
+                                    <input type='checkbox' name='forkliftControl' className='peer opacity-0 w-0 h-0' onClick={handleChange}/>
+                                    <span className='absolute cursor-pointer inset-0 bg-gray-300 rounded-full duration-300 before:content-[""] before:absolute before:w-4 before:h-4 before:bottom-1 before:left-1 before:rounded-full before:bg-white before:duration-300 peer-checked:before:translate-x-5 peer-checked:bg-blue-500' />
+                                </label>
+                            </div>
                         </div>
-                        <div className='min-w-[254px] flex flex-row items-start'>
-                            <label className='relative inline-block w-11 h-6 rounded-full'>
-                                <input type='checkbox' name='rolleyesControl' className='peer opacity-0 w-0 h-0' onClick={handleChange}/>
-                                <span className='absolute cursor-pointer inset-0 bg-gray-300 rounded-full duration-300 before:content-[""] before:absolute before:w-4 before:h-4 before:bottom-1 before:left-1 before:rounded-full before:bg-white before:duration-300 peer-checked:before:translate-x-5 peer-checked:bg-blue-500' />
-                            </label>
+                        <div className='flex flex-row items-center justify-end pr-5'>
+                            <div className='mr-3 leading-5'>
+                                Управление <br/> рохлей
+                            </div>
+                            <div className='flex flex-row items-start'>
+                                <label className='relative inline-block w-11 h-6 rounded-full'>
+                                    <input type='checkbox' name='rolleyesControl' className='peer opacity-0 w-0 h-0' onClick={handleChange}/>
+                                    <span className='absolute cursor-pointer inset-0 bg-gray-300 rounded-full duration-300 before:content-[""] before:absolute before:w-4 before:h-4 before:bottom-1 before:left-1 before:rounded-full before:bg-white before:duration-300 peer-checked:before:translate-x-5 peer-checked:bg-blue-500' />
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -345,24 +358,6 @@ const EmployeeAdd = ({ setActive, addValue }) => {
                         </label>
                         <input type='date' name='startOfLuchSeniority' className={`min-w-[204px] py-1 px-3 shadow border ${(valueFlags.startOfLuchSeniority.isDirty && valueFlags.startOfLuchSeniority.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
                     </div>
-                    <div className='flex flex-row items-center justify-end mt-3'>
-                        <label className='mr-3'>
-                            Оклад
-                        </label>
-                        <input type='number' name='salary' className={`remove-arrow py-1 px-3 shadow border ${(valueFlags.salary.isDirty && valueFlags.salary.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
-                    </div>
-                    <div className='flex flex-row items-center justify-end mt-3'>
-                        <label className='mr-3 leading-5'>
-                            Аванс <br /> <p className='whitespace-nowrap'>(% от оклада)</p>
-                        </label>
-                        <input type='number' name='percentageOfSalaryInAdvance' className={`remove-arrow py-1 px-3 shadow border ${(valueFlags.percentageOfSalaryInAdvance.isDirty && valueFlags.percentageOfSalaryInAdvance.isEmpty) && 'border-red-500'} rounded`} onChange={handleChange} onBlur={handleBlur}/>
-                    </div>
-                    {/* <div className='flex flex-row items-center justify-end mt-3'>
-                        <label className='mr-3'>
-                            Дата увольнения
-                        </label>
-                        <input type='date' name='dateOfTermination' className='min-w-[204px] py-1 px-3 shadow border rounded' onChange={handleChange}/>
-                    </div>   */}
                 </div>
             </div>
 

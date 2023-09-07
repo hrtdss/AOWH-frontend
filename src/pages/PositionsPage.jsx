@@ -20,10 +20,10 @@ const PositionsPage = () => {
     const [newVal, setNewVal] = useState([]);
 
     async function getTableOfPositions() {
-        let positions = await PositionService.getListOfPositions();
+        const positions = await PositionService.getListOfPositions('viewPositions');
 
         if (positions) {
-            let positionsData = [];
+            const positionsData = [];
             for (let position of positions) {
                 let data = await PositionService.getDataAboutPosition(position.value);
                 positionsData.push(data);
@@ -141,11 +141,11 @@ const PositionsPage = () => {
                 </tbody>
             </table>
             
-            {isModalAddActive && <Modal setActive={setIsModalAddActive}>
+            {isModalAddActive && <Modal setActive={setIsModalAddActive} modalHeader={'Добавление должности'}>
                 <PositionAdd setActive={setIsModalAddActive} addValue={setNewVal}/>
             </Modal>}
 
-            {isModalEditActive && <Modal setActive={setIsModalEditActive}>
+            {isModalEditActive && <Modal setActive={setIsModalEditActive} modalHeader={'Редактирование должности'}>
                 <PositionEdit rowData={selectedPositionData} setActive={setIsModalEditActive} changeValue={setNewVal}/>
             </Modal>}
         </div>

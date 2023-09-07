@@ -1,5 +1,7 @@
 import AxiosInstance from './AxiosInstance';
 
+import { ADMINISTRATOR } from './Constants';
+
 
 export const EmployeeService = {
     getListOfEmployees,
@@ -13,12 +15,26 @@ const allStocks = JSON?.parse(sessionStorage.getItem('allStocks'));
 
 async function getListOfEmployees() {
     try {
-        const response = await AxiosInstance.get('/Employee');
+        const userPositionId = localStorage.getItem('positionId');
+
+        let response;
+
+        if (userPositionId === ADMINISTRATOR) {
+            response = await AxiosInstance.get('/Employee');
+        }
+        else {
+            const employeeStocks = JSON?.parse(localStorage.getItem('employeeStocks'));
+            const stockIds = [];
+    
+            employeeStocks?.map(data => stockIds.push(data.value));
+    
+            response = await AxiosInstance.get('/Employee/certainStocks', { params: { stockIds: JSON.stringify(stockIds) } });
+        }
 
         if (response.status !== 200) {
             throw new Error(`Ошибка: ${response.status}`);
         }
-
+        
         return response.data;
     }
     catch (error) {
@@ -42,7 +58,7 @@ async function getDataByEmployeeId(employeeId) {
         const data = response.data;
 
         const stocks = data.stocks;
-        let result = [];
+        const result = [];
 
         for (let stock of stocks) {
             result.push({ value: stock.stockId, label: stock.stockName });
@@ -60,6 +76,7 @@ async function getDataByEmployeeId(employeeId) {
             startOfTotalSeniority: data.startOfTotalSeniority,
             startOfLuchSeniority: data.startOfLuchSeniority,
             dateOfTermination: data.dateOfTermination,
+            reasonOfTermination: data.reasonOfTermination,
             positionId: data.position.positionId,
             salary: data.salary,
             quarterlyBonus: data.position.quarterlyBonus,
@@ -96,7 +113,7 @@ async function addEmployee(values) {
         const data = response.data;
 
         const stocks = JSON.parse(data.stocks);
-        let result = [];
+        const result = [];
 
         for (let stock of stocks) {
             const index = allStocks.findIndex(data => data.value === stock);
@@ -135,7 +152,7 @@ async function editEmployee(employeeId, values) {
         const data = response.data;
 
         const stocks = JSON.parse(data.stocks);
-        let result = [];
+        const result = [];
 
         for (let stock of stocks) {
             const index = allStocks.findIndex(data => data.value === stock);

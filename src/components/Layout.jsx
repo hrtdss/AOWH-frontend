@@ -15,7 +15,7 @@ const Layout = () => {
 
     const navigate = useNavigate();
 
-    let numberOfPages = 0;   
+    let numberOfPages = 0;
     userData && Object.values(userData).forEach(value => numberOfPages += value);
 
     return (
@@ -30,35 +30,35 @@ const Layout = () => {
                     <ul className='hidden md:flex items-center text-base'>
                         {userData?.employeeCard && 
                         <li className='p-4 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
-                            <NavLink to='employeeCard' className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] drop-shadow-sm shadow-[#808080] border-x-2 border-[#ffc107] ease duration-300' : ''}>
+                            <NavLink to='employeeCard' className={({ isActive }) => isActive ? 'px-4 py-2 text-[#ffc107] drop-shadow-sm shadow-[#808080] border-x-2 border-[#ffc107] ease duration-300' : 'py-[30px]'}>
                                 Список сотрудников
                             </NavLink>
                         </li>}
 
                         {userData?.positionDirectory && 
                         <li className='p-4 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
-                            <NavLink to='positions' className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : ''}>
+                            <NavLink to='positions' className={({ isActive }) => isActive ? 'px-4 py-2 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : 'py-[30px]'}>
                                 Список должностей
                             </NavLink>
                         </li>}
 
                         {userData?.changes && 
                         <li className='p-4 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
-                            <NavLink to='shifts' className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : ''}>
+                            <NavLink to='shifts' className={({ isActive }) => isActive ? 'px-4 py-2 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : 'py-[30px]'}>
                                 Смены
                             </NavLink>
                         </li>}
 
                         {userData?.visitSchedule && 
                         <li className='p-4 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
-                            <NavLink to='attendance' className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : ''}>
+                            <NavLink to='attendance' className={({ isActive }) => isActive ? 'px-4 py-2 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : 'py-[30px]'}>
                                 Посещения
                             </NavLink>
                         </li>}
 
                         {userData?.accounting && 
                         <li className='p-4 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
-                            <NavLink to='accounting' className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : ''}>
+                            <NavLink to='accounting' className={({ isActive }) => isActive ? 'px-4 py-2 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : 'py-[30px]'}>
                                 Учёт
                             </NavLink>
                         </li>}
@@ -121,12 +121,13 @@ const Layout = () => {
                         <img className='h-16 grayscale z-[-1]' src={Logo} alt='footer logo'/>
                         <span>Транспортная компания <br/> &copy; 2023 «ЛУЧ»</span>
                     </div>
-
+                    
+                    {numberOfPages !== 0 &&
                     <div className='text-center mr-4'>
                         <button className='px-4 py-2 font-semibold bg-gray-100 border border-gray-300 rounded-md select-none' onClick={() => signOut(() => navigate('/AOWH-frontend', {replace: true}))}>
-                            Log Out
+                            Выйти
                         </button>
-                    </div>
+                    </div>}
                 </div>
             </footer>
         </div>

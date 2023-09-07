@@ -11,7 +11,7 @@ export const PositionService = {
     deletePosition
 };
 
-async function getListOfPositions() {
+async function getListOfPositions(action) {
     try {
         const response = await AxiosInstance.get('/Position')
 
@@ -19,20 +19,28 @@ async function getListOfPositions() {
             throw new Error(`Ошибка: ${response.status}`);
         }
 
-        let data = response.data;
-        data.splice(data.findIndex(value => value.positionId === DISMISSED_EMPLOYEE), 1);
+        const data = response.data;
 
+        if (action !== 'restore') {
+            data.splice(data.findIndex(value => value.positionId === DISMISSED_EMPLOYEE), 1);
+        }
+        
         const userPositionId = localStorage.getItem('positionId');
-        let requiredData = [];
+        const requiredData = [];
 
         if (userPositionId === ADMINISTRATOR) {
             for (let i = 0; i < data.length; i++) {
-                requiredData.push({ value: data[i].positionId, label: data[i].name });
+                if (action === 'restore' && data[i].positionId === DISMISSED_EMPLOYEE) {
+                    requiredData.push({ value: data[i].positionId, label: data[i].name, isDisabled: true });
+                }
+                else {
+                    requiredData.push({ value: data[i].positionId, label: data[i].name });
+                }
             }
         }
         else if (userPositionId === FRANCHISE_MANAGER) {
             for (let i = 0; i < data.length; i++) {
-                if (data[i].positionId === FRANCHISE_MANAGER) {
+                if (data[i].positionId === FRANCHISE_MANAGER || (action === 'restore' && data[i].positionId === DISMISSED_EMPLOYEE)) {
                     requiredData.push({ value: data[i].positionId, label: data[i].name, isDisabled: true });
                 }
                 else if (data[i].positionId !== ADMINISTRATOR) { // && data[i].positionId !== FRANCHISE_MANAGER
@@ -42,7 +50,7 @@ async function getListOfPositions() {
         }
         else if (userPositionId === STOCK_MANAGER) {
             for (let i = 0; i < data.length; i++) {
-                if (data[i].positionId === STOCK_MANAGER) {
+                if (data[i].positionId === STOCK_MANAGER || (action === 'restore' && data[i].positionId === DISMISSED_EMPLOYEE)) {
                     requiredData.push({ value: data[i].positionId, label: data[i].name, isDisabled: true });
                 }
                 else if (data[i].positionId !== ADMINISTRATOR && data[i].positionId !== FRANCHISE_MANAGER) { // && data[i].positionId !== STOCK_MANAGER

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ShiftService } from '../../services/ShiftService';
 
 
-const ShiftClose = ({ shiftData, setActive }) => {
+const ShiftClose = ({ shiftData, setActive, indicator }) => {
     const [, updateState] = useState();
     const forceUpdate = useCallback(() => updateState({}), []);
 
@@ -40,6 +40,7 @@ const ShiftClose = ({ shiftData, setActive }) => {
 
         if (data) {
             setActive(false);
+            indicator(true);
         }
     }
 
@@ -95,9 +96,7 @@ const ShiftClose = ({ shiftData, setActive }) => {
     }
 
     return (
-        <div className='text-base text-[#2c3e50]'>
-            <h2 className='flex mb-4 pl-1 pb-2 text-xl border-b border-[#2c3e50] border-opacity-10'>Закрытие смены ({shiftData.dayOrNight})</h2>
-            
+        <div className='text-base text-[#2c3e50]'>           
             <div className='flex justify-between mb-4 mx-1'>
                 <div>
                     <label className='font-bold'>
@@ -107,12 +106,11 @@ const ShiftClose = ({ shiftData, setActive }) => {
                 </div>
 
                 <button className='ml-8 px-2 py-1 border border-gray-300 rounded-md select-none' onClick={handleApplyClick}>
-                    Применить
+                    Применить ко всем
                 </button>
             </div>
 
             <div className=''>
-                {/* max-w-[95%] max-h-[535px] */}
                 <table className='block overflow-y-auto border-x-2 border-t-2 rounded-md whitespace-nowrap'>
                     <thead className='bg-slate-300'>
                         <tr className='text-base/5 text-left'>
@@ -141,7 +139,7 @@ const ShiftClose = ({ shiftData, setActive }) => {
                                     </td>
                                     <td className='px-2 py-[4px] border-b-2 border-l-2'>
                                         <div className='flex items-center justify-center'>
-                                            <input type='time' name={data.employeeId} className={`w-[80px] py-1 px-1 shadow-sm border ${(isErrorActive && employeeTimes[data.employeeId] === '') && 'border-red-500'} rounded`} value={employeeTimes && employeeTimes[data.employeeId]} onChange={handleChange}/>
+                                            <input type='time' name={data.employeeId} className={`w-[80px] py-1 px-1 border ${(isErrorActive && employeeTimes[data.employeeId] === '') ? 'border-red-500' : 'border-slate-100'} bg-slate-100 rounded`} value={employeeTimes && employeeTimes[data.employeeId]} onChange={handleChange}/>
                                         </div>
                                     </td>
                                 </tr>
