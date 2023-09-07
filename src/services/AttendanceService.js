@@ -42,6 +42,7 @@ async function getAttendance(selectedMonth, values) {
 
         localStorage.setItem('savedAttendance', JSON.stringify(attendance));
 
+        //console.log(data);
         return data;
     }
     catch (error) {

@@ -15,17 +15,18 @@ async function getAccounting(year, month, stockId) {
             throw new Error(`Ошибка: ${response.status}`);
         }
 
-        const index = allStocks.findIndex(data => data.value === stockId);
+        const data = await response.data;
+        const index = allStocks.findIndex(stock => stock.value === stockId);
 
         const accounting = {
             stock: allStocks[index],
             date: [year, month],
-            data: response.data
+            data: data
         };
 
         localStorage.setItem('savedAccounting', JSON.stringify(accounting));
         
-        return response.data;
+        return data;
     }
     catch (error) {
         if (!error?.response) {
