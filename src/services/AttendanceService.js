@@ -5,8 +5,6 @@ export const AttendanceService = {
     getAttendance
 };
 
-const allStocks = JSON?.parse(sessionStorage.getItem('allStocks'));
-
 async function getAttendance(selectedMonth, values) {
     try {
         const response = await AxiosInstance.post('/Attendance', values);
@@ -15,9 +13,9 @@ async function getAttendance(selectedMonth, values) {
             throw new Error(`Ошибка: ${response.status}`);
         }
 
-        const data = await response.data;
+        const attendanceData = await response.data;
 
-        for (let value of data) {
+        for (let value of attendanceData) {
             let shifts = Array.from({length: selectedMonth.totalDays}, (_, i) => ({
                 day: i + 1,
                 dayOrNight: '',
@@ -31,19 +29,19 @@ async function getAttendance(selectedMonth, values) {
             value.shifts = shifts;
         }
 
-        const index = allStocks.findIndex(data => data.value === values.stockId);
+        const allStocks = JSON?.parse(localStorage.getItem('allStocks'));
+        const index = allStocks.findIndex(stock => stock.value === values.stockId);
 
         const attendance = {
             stock: allStocks[index],
             date: [values.year, values.month],
-            data: data,
+            data: attendanceData,
             daysInMonth: selectedMonth
         };
 
         localStorage.setItem('savedAttendance', JSON.stringify(attendance));
 
-        //console.log(data);
-        return data;
+        return attendanceData;
     }
     catch (error) {
         if (!error?.response) {

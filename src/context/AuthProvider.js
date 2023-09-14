@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem('access', JSON.stringify(accesses));               
 
                 const allStocks = await StockService.getListOfStocks();
-                sessionStorage.setItem('allStocks', JSON.stringify(allStocks));
+                localStorage.setItem('allStocks', JSON.stringify(allStocks));
 
                 if (availableStocks.length === 0) {
                     localStorage.setItem('employeeStocks', JSON.stringify(allStocks));

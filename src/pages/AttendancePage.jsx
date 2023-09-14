@@ -10,36 +10,22 @@ function getNumberOfDaysInMonth(month, year) {
 }
 
 const AttendancePage = () => {
-    // ! Переделать
-    const [stocks, ] = useState(JSON?.parse(localStorage.getItem('employeeStocks'))); 
-    const [selectedStock, setSelectedStock] = useState(JSON?.parse(localStorage.getItem('savedAttendance'))?.stock || stocks[0]);
+    const [savedRows, ] = useState(JSON?.parse(localStorage.getItem('savedAttendance')) ?? '');
 
-    const [savedMonthAndYear, ] = useState(JSON?.parse(localStorage.getItem('savedAttendance'))?.date || '');
-    const [selectedMonthAndYear, setSelectedMonthAndYear] = useState((savedMonthAndYear && `${savedMonthAndYear[0]}-${savedMonthAndYear[1] < 10 ? '0' + savedMonthAndYear[1] : savedMonthAndYear[1]}`) || '');
+    const [stocks, ] = useState(JSON?.parse(localStorage.getItem('employeeStocks')));
+    const [selectedStock, setSelectedStock] = useState(savedRows?.stock ?? stocks[0]);
 
-    const [daysInMonth, setDaysInMonth] = useState(JSON?.parse(localStorage.getItem('savedAttendance'))?.daysInMonth || '');
+    const [savedMonthAndYear, ] = useState(savedRows?.date ?? '');
+    const [selectedMonthAndYear, setSelectedMonthAndYear] = useState((savedMonthAndYear && `${savedMonthAndYear[0]}-${savedMonthAndYear[1] < 10 ? '0' + savedMonthAndYear[1] : savedMonthAndYear[1]}`) ?? '');
+
+    const [daysInMonth, setDaysInMonth] = useState(savedRows?.daysInMonth ?? '');
 
     const [columnsWithDaysOfMonth, setColumnsWithDaysOfMonth] = useState((daysInMonth && Array.from({length: daysInMonth.totalDays}, (_, i) => i + 1)) || []);
 
-    const [fullMonthDataFlag, setFullMonthDataFlag] = useState((daysInMonth && daysInMonth.daysFromBeginningOfMonth === daysInMonth.totalDays) ? true : false); // false
-    const [isMonthDataFlagDisabled, setIsMonthDataFlagDisabled] = useState((daysInMonth && daysInMonth.daysFromBeginningOfMonth === daysInMonth.totalDays) ? true : false); // false
+    const [fullMonthDataFlag, setFullMonthDataFlag] = useState((daysInMonth && daysInMonth.daysFromBeginningOfMonth === daysInMonth.totalDays) ? true : false);
+    const [isMonthDataFlagDisabled, setIsMonthDataFlagDisabled] = useState((daysInMonth && daysInMonth.daysFromBeginningOfMonth === daysInMonth.totalDays) ? true : false);
 
-    const [savedRows, ] = useState(JSON?.parse(localStorage.getItem('savedAttendance'))?.data || '');
-    const [rows, setRows] = useState(savedRows === '' ? [] : savedRows.length > 0 ? savedRows : '');
-
-    // const [stocks, ] = useState(JSON?.parse(localStorage.getItem('employeeStocks'))); 
-    // const [selectedStock, setSelectedStock] = useState(stocks[0]);
-
-    // const [selectedMonthAndYear, setSelectedMonthAndYear] = useState('');
-
-    // const [fullMonthDataFlag, setFullMonthDataFlag] = useState(false);
-    // const [isMonthDataFlagDisabled, setIsMonthDataFlagDisabled] = useState(false);
-
-    // const [daysInMonth, setDaysInMonth] = useState('');
-
-    // const [columnsWithDaysOfMonth, setColumnsWithDaysOfMonth] = useState([]);
-
-    // const [rows, setRows] = useState([]);
+    const [rows, setRows] = useState(savedRows === '' ? [] : savedRows?.data.length > 0 ? savedRows.data : '');
 
     async function getTableOfAttendance() {
         if (!selectedMonthAndYear) {
@@ -56,9 +42,10 @@ const AttendancePage = () => {
             year: selectedDate.getFullYear()
         }
 
+        const totalDays = getNumberOfDaysInMonth(values.month, values.year);
         const selectedMonth = {
-            daysFromBeginningOfMonth: currDate.getMonth() === selectedDate.getMonth() ? currDate.getDate() : getNumberOfDaysInMonth(values.month, values.year), // currDate.getDate()
-            totalDays: getNumberOfDaysInMonth(values.month, values.year)
+            daysFromBeginningOfMonth: currDate.getMonth() === selectedDate.getMonth() ? currDate.getDate() : totalDays,
+            totalDays
         }
 
         setDaysInMonth(selectedMonth); 
@@ -121,25 +108,25 @@ const AttendancePage = () => {
                         <th rowSpan={2} className='px-2 py-1 text-left border-b-2'>
                             ФИО
                         </th>
-                        <th rowSpan={2} className='px-1 py-1 text-left border-b-2 border-l-2'>
+                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Должность
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                             ДН/ <br/> см
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Часов/ <br/> дн
+                            Часов/ <br/> ДН
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                             НЧ/ <br/> см
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Часов/ <br/> нч
+                            Часов/ <br/> НЧ
                         </th>
                         {
                             columnsWithDaysOfMonth.map((data, index) => (
                                 (index + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
-                                <th key={index} colSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
+                                <th key={index + 1} colSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                                     {data}
                                 </th>
                             ))
@@ -171,7 +158,7 @@ const AttendancePage = () => {
                                 <td className='px-2 py-[6px] border-b-2'>
                                     {data.employee.fullName}
                                 </td>
-                                <td className='px-1 py-[6px] border-b-2 border-l-2'>
+                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.employee.positionName}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
@@ -213,25 +200,25 @@ const AttendancePage = () => {
                         <th rowSpan={2} className='px-2 py-1 text-left border-b-2'>
                             ФИО
                         </th>
-                        <th rowSpan={2} className='px-1 py-1 text-left border-b-2 border-l-2'>
+                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Должность
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                             ДН/ <br/> см
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Часов/ <br/> дн
+                            Часов/ <br/> ДН
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                             НЧ/ <br/> см
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Часов/ <br/> нч
+                            Часов/ <br/> НЧ
                         </th>
                         {
                             columnsWithDaysOfMonth.map((data, index) => (
                                 (index + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
-                                <th key={index} colSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
+                                <th key={index + 1} colSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                                     {data}
                                 </th>
                             ))
@@ -263,7 +250,7 @@ const AttendancePage = () => {
                                 <td className='px-2 py-[6px] border-b-2'>
                                     {data.employee.fullName}
                                 </td>
-                                <td className='px-1 py-[6px] border-b-2 border-l-2'>
+                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.employee.positionName}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
@@ -305,29 +292,45 @@ const AttendancePage = () => {
                         <th rowSpan={2} className='px-2 py-1 text-left border-b-2'>
                             ФИО
                         </th>
-                        <th rowSpan={2} className='px-1 py-1 text-left border-b-2 border-l-2'>
+                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Должность
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            ДН/ <br/> см
+                            {/* ДН/ <br/> см */}
+                            Кол-во <br/> дневн. <br/> смен
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Часов/ <br/> дн
+                            {/* Часов/ <br/> ДН */}
+                            Часов в <br/> дневн. <br/> смен
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            НЧ/ <br/> см
+                            {/* НЧ/ <br/> см */}
+                            Кол-во <br/> ночн. <br/> смен
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Часов/ <br/> нч
+                            {/* Часов/ <br/> НЧ */}
+                            Часов в <br/> ночн. <br/> смен
                         </th>
                         {
                             columnsWithDaysOfMonth.map((data, index) => (
                                 (index + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
-                                <th key={index} colSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
+                                <th key={index + 1} colSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                                     {data}
                                 </th>
                             ))
                         }
+                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
+                            Смен <br/> ДЕНЬ
+                        </th>
+                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
+                            Часов <br/> ДЕНЬ
+                        </th>
+                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
+                            Смен <br/> НОЧЬ
+                        </th>
+                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
+                            Часов <br/> НОЧЬ
+                        </th>
                     </tr>
                     <tr>
                         {
@@ -355,20 +358,24 @@ const AttendancePage = () => {
                                 <td className='px-2 py-[6px] border-b-2'>
                                     {data.employee.fullName}
                                 </td>
-                                <td className='px-1 py-[6px] border-b-2 border-l-2'>
+                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.employee.positionName}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {`${data.employee.countOfDayShifts} / ${data.employee.planForNumberOfDayShifts}`} 
+                                    {/* {`${data.employee.countOfDayShifts} / ${data.employee.planForNumberOfDayShifts}`} */}
+                                    {data.employee.planForNumberOfDayShifts}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.employee.countOfDayHours}
+                                    {/* {data.employee.countOfDayHours} */}
+                                    {data.employee.planForNumberOfHoursPerDayShift}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {`${data.employee.countOfNightShifts} / ${data.employee.planForNumberOfNightShifts}`}
+                                    {/* {`${data.employee.countOfNightShifts} / ${data.employee.planForNumberOfNightShifts}`} */}
+                                    {data.employee.planForNumberOfNightShifts}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.employee.countOfNightHours}
+                                    {/* {data.employee.countOfNightHours} */}
+                                    {data.employee.planForNumberOfHoursPerNightShift}
                                 </td>
                                 {
                                     data.shifts.map((shiftData, shiftIndex) => (
@@ -383,6 +390,18 @@ const AttendancePage = () => {
                                         </>
                                     ))
                                 }
+                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
+                                    {data.employee.countOfDayShifts}
+                                </td>
+                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
+                                    {data.employee.countOfDayHours}
+                                </td>
+                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
+                                    {data.employee.countOfNightShifts}
+                                </td>
+                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
+                                    {data.employee.countOfNightHours}
+                                </td>
                             </tr>
                         ))
                     }

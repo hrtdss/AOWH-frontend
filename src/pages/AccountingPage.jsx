@@ -4,16 +4,21 @@ import Select from 'react-select';
 import { AccountingService } from '../services/AccountingService';
 import { SELECT_STYLE } from '../services/Constants';
 
+import AccountingCell from '../components/Accounting/AccountingCell';
+import Modal from '../components/Modal';
+import AccountingPenaltiesAndSends from '../components/Accounting/AccountingPenaltiesAndSends';
+
 
 const AccountingPage = () => {
+    const [savedRows, ] = useState(JSON?.parse(localStorage.getItem('savedAccounting')) ?? '');
+
     const [stocks, ] = useState(JSON?.parse(localStorage.getItem('employeeStocks'))); 
-    const [selectedStock, setSelectedStock] = useState(JSON?.parse(localStorage.getItem('savedAccounting'))?.stock || stocks[0]);
+    const [selectedStock, setSelectedStock] = useState(savedRows?.stock ?? stocks[0]);
 
-    const [savedMonthAndYear, ] = useState(JSON?.parse(localStorage.getItem('savedAccounting'))?.date || '');
-    const [selectedMonthAndYear, setSelectedMonthAndYear] = useState((savedMonthAndYear && `${savedMonthAndYear[0]}-${savedMonthAndYear[1] < 10 ? '0' + savedMonthAndYear[1] : savedMonthAndYear[1]}`) || '');
+    const [savedMonthAndYear, ] = useState(savedRows?.date ?? '');
+    const [selectedMonthAndYear, setSelectedMonthAndYear] = useState((savedMonthAndYear && `${savedMonthAndYear[0]}-${savedMonthAndYear[1] < 10 ? '0' + savedMonthAndYear[1] : savedMonthAndYear[1]}`) ?? '');
 
-    const [savedRows, ] = useState(JSON?.parse(localStorage.getItem('savedAccounting'))?.data || '');
-    const [rows, setRows] = useState(savedRows === '' ? [] : savedRows.length > 0 ? savedRows : '');
+    const [rows, setRows] = useState(savedRows === '' ? [] : savedRows?.data.length > 0 ? savedRows.data : '');
 
     async function getTableOfAccounting() {
         if (!selectedMonthAndYear) {
@@ -31,6 +36,43 @@ const AccountingPage = () => {
         else {
             setRows('');
         }
+    }
+
+    async function handleCellChange(fieldName, employeeIndex, employeeId, value) {
+        if (value === rows[employeeIndex][fieldName]) {
+            return;
+        }
+
+        const date = selectedMonthAndYear.split('-');
+        const values = {
+            employeeId,
+            year: Number(date[0]),
+            month: Number(date[1]),
+            mentoring: fieldName === 'mentoring' ? Number(value) : -1,
+            teaching: fieldName === 'teaching' ? Number(value) : -1,
+            bonus: fieldName === 'bonus' ? Number(value) : -1,
+            vacation: fieldName === 'vacation' ? Number(value) : -1,
+            advance: fieldName === 'advance' ? Number(value) : -1
+        };
+
+        const data = await AccountingService.updateEmployeeAccounting(employeeIndex, fieldName, values);
+
+        if (data) {
+            rows[employeeIndex][fieldName] = value;
+        }
+    }
+
+    const [isModalPenaltiesOrSendsActive, setIsModalPenaltiesOrSendsActive] = useState(false);
+
+    const [selectedEmployeeAccounting, setSelectedEmployeeAccounting] = useState('');
+
+    const handlePenaltiesOrSendsClick = (e) => {
+        const employeeId = e.currentTarget.getAttribute('data-value'); 
+
+        // const employeeData = await EmployeeService.getDataByEmployeeId(employeeId);
+        // setSelectedEmployeeAccounting(employeeData);
+
+        setIsModalPenaltiesOrSendsActive(true);
     }
 
     return (
@@ -65,8 +107,11 @@ const AccountingPage = () => {
                         <th className='px-2 py-1 border-b-2'>
                             ФИО
                         </th>
-                        <th className='px-1 py-1 border-b-2 border-l-2'>
+                        <th className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Должность
+                        </th>
+                        <th className='px-1 py-1 text-center border-b-2 border-l-2'>
+                            ЗП, <br/> руб.
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Переработано <br/> часов ДН
@@ -96,16 +141,16 @@ const AccountingPage = () => {
                             Отпуск, <br/> руб.
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            ЗП, <br/> руб.
+                            К выплате, <br/> руб.
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Аванс, <br/> руб.
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Штраф, <br/> руб.
+                            Штрафы, <br/> руб.
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Засыл, <br/> руб.
+                            Засылы, <br/> руб.
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Итого к <br/> выплате
@@ -121,8 +166,11 @@ const AccountingPage = () => {
                                 <td className='px-2 py-[6px] border-b-2'>
                                     {data.fullName}
                                 </td>
-                                <td className='px-1 py-[6px] border-b-2 border-l-2'>
+                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.positionName}
+                                </td>
+                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
+                                    {data.salary}
                                 </td>
                                 <td className='px-4 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.overtimeDay}
@@ -140,27 +188,27 @@ const AccountingPage = () => {
                                     {data.seniority}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.mentoring}
+                                    <AccountingCell fieldName={'mentoring'} employeeIndex={index} employeeId={data.employeeId} value={data.mentoring} onChange={handleCellChange}/>
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.teaching}
+                                    <AccountingCell fieldName={'teaching'} employeeIndex={index} employeeId={data.employeeId} value={data.teaching} onChange={handleCellChange}/>
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.bonus}
+                                    <AccountingCell fieldName={'bonus'} employeeIndex={index} employeeId={data.employeeId} value={data.bonus} onChange={handleCellChange}/>
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.vacation}
+                                    <AccountingCell fieldName={'vacation'} employeeIndex={index} employeeId={data.employeeId} value={data.vacation} onChange={handleCellChange}/>
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.earned}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.advance}
+                                    <AccountingCell fieldName={'advance'} employeeIndex={index} employeeId={data.employeeId} value={data.advance} onChange={handleCellChange}/>
                                 </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
+                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2' data-value={data.employeeId} onClick={handlePenaltiesOrSendsClick}>
                                     {data.penalties}
                                 </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
+                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2' data-value={data.employeeId} onClick={handlePenaltiesOrSendsClick}>
                                     {data.sends}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
@@ -171,6 +219,10 @@ const AccountingPage = () => {
                     }
                 </tbody>
             </table>}
+
+            {isModalPenaltiesOrSendsActive && <Modal setActive={setIsModalPenaltiesOrSendsActive} modalHeader={'Штрафы и засылы'}>
+                <AccountingPenaltiesAndSends rowData={selectedEmployeeAccounting} setActive={setIsModalPenaltiesOrSendsActive} addValue={1}/>
+            </Modal>}
         </div>
     )
 }

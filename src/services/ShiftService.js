@@ -20,13 +20,15 @@ async function getListOfOpenShifts(stockId) {
 
         const data = response.data;
 
+        const openingDateAndTime = data.openingDateAndTime.split('-');
+
         return {
             value: {
                 shiftId: data.shiftId,
                 dayOrNight: data.dayOrNight,
                 employees: data.employees
             },
-            label: `${data.dayOrNight} -- ${data.openingDateAndTime} -- ...` 
+            label: `${data.dayOrNight} — ${openingDateAndTime[2] + '.' + openingDateAndTime[1] + '.' + openingDateAndTime[0]} — ...` 
         };
     }
     catch (error) {
@@ -55,12 +57,15 @@ async function getPastShifts(stockId) {
 
         const result = [];
         for (let value of data) {
+            const openingDateAndTime = value.openingDateAndTime.split('-');
+            const closingDateAndTime = value.closingDateAndTime.split('-');
+
             result.push({ 
                 value: { 
                     dayOrNight: value.dayOrNight,
                     employees: value.employees
                 },
-                label: `${value.dayOrNight} -- ${value.openingDateAndTime} -- ${value.closingDateAndTime}` 
+                label: `${value.dayOrNight} — ${openingDateAndTime[2] + '.' + openingDateAndTime[1] + '.' + openingDateAndTime[0]} — ${closingDateAndTime[2] + '.' + closingDateAndTime[1] + '.' + closingDateAndTime[0]}` 
             });
         }
 

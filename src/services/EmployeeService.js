@@ -11,7 +11,7 @@ export const EmployeeService = {
     terminateEmployee
 };
 
-const allStocks = JSON?.parse(sessionStorage.getItem('allStocks'));
+const allStocks = JSON?.parse(localStorage.getItem('allStocks'));
 
 async function getListOfEmployees() {
     try {
