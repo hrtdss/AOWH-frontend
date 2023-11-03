@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 
-const AccountingPenaltiesAndSends = ({ rowData, setActive, changeValue }) => {    
+const AccountingPenaltiesAndSends = ({ rowData, setActive, addValue }) => {
     const [, updateState] = useState();
     const forceUpdate = useCallback(() => updateState({}), []);
 

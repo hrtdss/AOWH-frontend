@@ -101,192 +101,7 @@ const AttendancePage = () => {
                 Информация за указанный месяц и год отсутствует
             </div> : 
             rows.length > 0 &&
-            <>
             <table className='block max-w-[99%] overflow-auto mb-1 border-x-2 border-t-2 rounded-md whitespace-nowrap select-none'>
-                <thead className='text-base/5 bg-slate-300'>
-                    <tr>
-                        <th rowSpan={2} className='px-2 py-1 text-left border-b-2'>
-                            ФИО
-                        </th>
-                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Должность
-                        </th>
-                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            ДН/ <br/> см
-                        </th>
-                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Часов/ <br/> ДН
-                        </th>
-                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            НЧ/ <br/> см
-                        </th>
-                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Часов/ <br/> НЧ
-                        </th>
-                        {
-                            columnsWithDaysOfMonth.map((data, index) => (
-                                (index + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
-                                <th key={index + 1} colSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                                    {data}
-                                </th>
-                            ))
-                        }
-                    </tr>
-                    <tr>
-                        {
-                            columnsWithDaysOfMonth.map((_, index) => (
-                                (index + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
-                                <>
-                                    <th key={index + 1} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                                        Д
-                                    </th>
-                                    <th key={-(index + 1)} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                                        Н
-                                    </th>
-                                </>
-                            ))
-                        }
-                    </tr>
-                </thead>
-
-                <tbody className='text-base/5 bg-slate-100'>
-                    {
-                        rows
-                        ?.map((data, index) => (
-                            (index + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
-                            <tr key={index} className='hover:bg-slate-200'>
-                                <td className='px-2 py-[6px] border-b-2'>
-                                    {data.employee.fullName}
-                                </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.employee.positionName}
-                                </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {`${data.employee.countOfDayShifts} / ${data.employee.planForNumberOfDayShifts}`} 
-                                </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.employee.countOfDayHours}
-                                </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {`${data.employee.countOfNightShifts} / ${data.employee.planForNumberOfNightShifts}`}
-                                </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.employee.countOfNightHours}
-                                </td>
-                                {
-                                    data.shifts.map((shiftData, shiftIndex) => (
-                                        (shiftIndex + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
-                                        <>
-                                            <td key={shiftIndex + 1} className='px-2 py-[6px] text-center border-b-2 border-l-2'> 
-                                                {(shiftIndex + 1 === shiftData.day && shiftData.dayOrNight === 'Дневная') ? shiftData.workedHours : '-'}
-                                            </td>
-                                            <td key={-(shiftIndex + 1)} className='px-2 py-[6px] text-center border-b-2 border-l-2'>
-                                                {(shiftIndex + 1 === shiftData.day && shiftData.dayOrNight === 'Ночная') ? shiftData.workedHours : '-'}
-                                            </td>
-                                        </>
-                                    ))
-                                }
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </table>
-
-
-
-            <table className='mt-10 block max-w-[99%] overflow-auto mb-1 border-x-2 border-t-2 rounded-md whitespace-nowrap select-none'>
-                <thead className='text-sm bg-slate-300'>
-                    <tr>
-                        <th rowSpan={2} className='px-2 py-1 text-left border-b-2'>
-                            ФИО
-                        </th>
-                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Должность
-                        </th>
-                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            ДН/ <br/> см
-                        </th>
-                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Часов/ <br/> ДН
-                        </th>
-                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            НЧ/ <br/> см
-                        </th>
-                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Часов/ <br/> НЧ
-                        </th>
-                        {
-                            columnsWithDaysOfMonth.map((data, index) => (
-                                (index + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
-                                <th key={index + 1} colSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                                    {data}
-                                </th>
-                            ))
-                        }
-                    </tr>
-                    <tr>
-                        {
-                            columnsWithDaysOfMonth.map((_, index) => (
-                                (index + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
-                                <>
-                                    <th key={index + 1} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                                        Д
-                                    </th>
-                                    <th key={-(index + 1)} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                                        Н
-                                    </th>
-                                </>
-                            ))
-                        }
-                    </tr>
-                </thead>
-
-                <tbody className='text-sm bg-slate-100'>
-                    {
-                        rows
-                        ?.map((data, index) => (
-                            (index + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
-                            <tr key={index} className='hover:bg-slate-200'>
-                                <td className='px-2 py-[6px] border-b-2'>
-                                    {data.employee.fullName}
-                                </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.employee.positionName}
-                                </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {`${data.employee.countOfDayShifts} / ${data.employee.planForNumberOfDayShifts}`} 
-                                </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.employee.countOfDayHours}
-                                </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {`${data.employee.countOfNightShifts} / ${data.employee.planForNumberOfNightShifts}`}
-                                </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.employee.countOfNightHours}
-                                </td>
-                                {
-                                    data.shifts.map((shiftData, shiftIndex) => (
-                                        (shiftIndex + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
-                                        <>
-                                            <td key={shiftIndex + 1} className='px-2 py-[6px] text-center border-b-2 border-l-2'> 
-                                                {(shiftIndex + 1 === shiftData.day && shiftData.dayOrNight === 'Дневная') ? shiftData.workedHours : '-'}
-                                            </td>
-                                            <td key={-(shiftIndex + 1)} className='px-2 py-[6px] text-center border-b-2 border-l-2'>
-                                                {(shiftIndex + 1 === shiftData.day && shiftData.dayOrNight === 'Ночная') ? shiftData.workedHours : '-'}
-                                            </td>
-                                        </>
-                                    ))
-                                }
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </table>
-
-
-
-            <table className='mt-10 block max-w-[99%] overflow-auto mb-1 border-x-2 border-t-2 rounded-md whitespace-nowrap select-none'>
                 <thead className='text-xs bg-slate-300'>
                     <tr>
                         <th rowSpan={2} className='px-2 py-1 text-left border-b-2'>
@@ -362,19 +177,15 @@ const AttendancePage = () => {
                                     {data.employee.positionName}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {/* {`${data.employee.countOfDayShifts} / ${data.employee.planForNumberOfDayShifts}`} */}
                                     {data.employee.planForNumberOfDayShifts}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {/* {data.employee.countOfDayHours} */}
                                     {data.employee.planForNumberOfHoursPerDayShift}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {/* {`${data.employee.countOfNightShifts} / ${data.employee.planForNumberOfNightShifts}`} */}
                                     {data.employee.planForNumberOfNightShifts}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {/* {data.employee.countOfNightHours} */}
                                     {data.employee.planForNumberOfHoursPerNightShift}
                                 </td>
                                 {
@@ -406,8 +217,7 @@ const AttendancePage = () => {
                         ))
                     }
                 </tbody>
-            </table>
-            </>}
+            </table>}
         </div>
     )
 }
