@@ -14,7 +14,7 @@ const EmployeeAdd = ({ setActive, addValue }) => {
             indicatorsContainer: base => ({ ...base, height: '36px' })
         },
         stock: {
-            control: base => ({ ...base, minHeight: '36px', boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)', borderColor: (valueFlags.stocks.isDirty && valueFlags.stocks.isEmpty) && 'rgb(239 68 68)', borderRadius: '4px' }),
+            control: base => ({ ...base, minHeight: '36px', boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)', borderColor: (valueFlags.stock.isDirty && valueFlags.stock.isEmpty) && 'rgb(239 68 68)', borderRadius: '4px' }),
             valueContainer: base => ({ ...base, minHeight: '36px', padding: '2px 8px' })
         },
         link: {

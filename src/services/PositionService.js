@@ -21,44 +21,47 @@ async function getListOfPositions(action) {
 
         const data = response.data;
 
-        if (action !== 'restore') {
-            data.splice(data.findIndex(value => value.positionId === DISMISSED_EMPLOYEE), 1);
-        }
+        // if (action !== 'restore') {
+        //     data.splice(data.findIndex(value => value.positionId === DISMISSED_EMPLOYEE), 1);
+        // }
         
         const userPositionId = localStorage.getItem('positionId');
         const requiredData = [];
 
-        if (userPositionId === ADMINISTRATOR) {
-            for (let i = 0; i < data.length; i++) {
-                if (action === 'restore' && data[i].positionId === DISMISSED_EMPLOYEE) {
-                    requiredData.push({ value: data[i].positionId, label: data[i].name, isDisabled: true });
-                }
-                else {
-                    requiredData.push({ value: data[i].positionId, label: data[i].name });
-                }
-            }
+        // if (userPositionId === ADMINISTRATOR) {
+        //     for (let i = 0; i < data.length; i++) {
+        //         if (action === 'restore' && data[i].positionId === DISMISSED_EMPLOYEE) {
+        //             requiredData.push({ value: data[i].positionId, label: data[i].name, isDisabled: true });
+        //         }
+        //         else {
+        //             requiredData.push({ value: data[i].positionId, label: data[i].name });
+        //         }
+        //     }
+        // }
+        // else if (userPositionId === FRANCHISE_MANAGER) {
+        //     for (let i = 0; i < data.length; i++) {
+        //         if (data[i].positionId === FRANCHISE_MANAGER || (action === 'restore' && data[i].positionId === DISMISSED_EMPLOYEE)) {
+        //             requiredData.push({ value: data[i].positionId, label: data[i].name, isDisabled: true });
+        //         }
+        //         else if (data[i].positionId !== ADMINISTRATOR) { // && data[i].positionId !== FRANCHISE_MANAGER
+        //             requiredData.push({ value: data[i].positionId, label: data[i].name });
+        //         }
+        //     }
+        // }
+        // else if (userPositionId === STOCK_MANAGER) {
+        //     for (let i = 0; i < data.length; i++) {
+        //         if (data[i].positionId === STOCK_MANAGER || (action === 'restore' && data[i].positionId === DISMISSED_EMPLOYEE)) {
+        //             requiredData.push({ value: data[i].positionId, label: data[i].name, isDisabled: true });
+        //         }
+        //         else if (data[i].positionId !== ADMINISTRATOR && data[i].positionId !== FRANCHISE_MANAGER) { // && data[i].positionId !== STOCK_MANAGER
+        //             requiredData.push({ value: data[i].positionId, label: data[i].name });
+        //         }
+        //     }
+        // }
+        
+        for (let i = 0; i < data.length; i++) {
+            requiredData.push({ value: data[i].positionId, label: data[i].name });
         }
-        else if (userPositionId === FRANCHISE_MANAGER) {
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].positionId === FRANCHISE_MANAGER || (action === 'restore' && data[i].positionId === DISMISSED_EMPLOYEE)) {
-                    requiredData.push({ value: data[i].positionId, label: data[i].name, isDisabled: true });
-                }
-                else if (data[i].positionId !== ADMINISTRATOR) { // && data[i].positionId !== FRANCHISE_MANAGER
-                    requiredData.push({ value: data[i].positionId, label: data[i].name });
-                }
-            }
-        }
-        else if (userPositionId === STOCK_MANAGER) {
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].positionId === STOCK_MANAGER || (action === 'restore' && data[i].positionId === DISMISSED_EMPLOYEE)) {
-                    requiredData.push({ value: data[i].positionId, label: data[i].name, isDisabled: true });
-                }
-                else if (data[i].positionId !== ADMINISTRATOR && data[i].positionId !== FRANCHISE_MANAGER) { // && data[i].positionId !== STOCK_MANAGER
-                    requiredData.push({ value: data[i].positionId, label: data[i].name });
-                }
-            }
-        }
-        // Обработать кладовщика?
 
         return requiredData;
     }
