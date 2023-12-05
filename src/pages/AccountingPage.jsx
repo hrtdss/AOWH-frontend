@@ -170,7 +170,7 @@ const AccountingPage = () => {
                                     {data.positionName}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.salary}
+                                    {data.salary.toFixed(2)}
                                 </td>
                                 <td className='px-4 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.overtimeDay}
@@ -179,40 +179,40 @@ const AccountingPage = () => {
                                     {data.overtimeNight}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.salaryForHour}
+                                    {data.salaryForHour.toFixed(2)}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.salaryForShift}
+                                    {data.salaryForShift.toFixed(2)}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.seniority}
+                                    {data.seniority.toFixed(2)}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    <AccountingCell fieldName={'mentoring'} employeeIndex={index} employeeId={data.employeeId} value={data.mentoring} onChange={handleCellChange}/>
+                                    <AccountingCell fieldName={'mentoring'} employeeIndex={index} employeeId={data.employeeId} value={data.mentoring.toFixed(2)} onChange={handleCellChange}/>
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    <AccountingCell fieldName={'teaching'} employeeIndex={index} employeeId={data.employeeId} value={data.teaching} onChange={handleCellChange}/>
+                                    <AccountingCell fieldName={'teaching'} employeeIndex={index} employeeId={data.employeeId} value={data.teaching.toFixed(2)} onChange={handleCellChange}/>
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    <AccountingCell fieldName={'bonus'} employeeIndex={index} employeeId={data.employeeId} value={data.bonus} onChange={handleCellChange}/>
+                                    <AccountingCell fieldName={'bonus'} employeeIndex={index} employeeId={data.employeeId} value={data.bonus.toFixed(2)} onChange={handleCellChange}/>
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    <AccountingCell fieldName={'vacation'} employeeIndex={index} employeeId={data.employeeId} value={data.vacation} onChange={handleCellChange}/>
+                                    <AccountingCell fieldName={'vacation'} employeeIndex={index} employeeId={data.employeeId} value={data.vacation.toFixed(2)} onChange={handleCellChange}/>
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.earned}
+                                    {data.earned.toFixed(2)}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    <AccountingCell fieldName={'advance'} employeeIndex={index} employeeId={data.employeeId} value={data.advance} onChange={handleCellChange}/>
+                                    <AccountingCell fieldName={'advance'} employeeIndex={index} employeeId={data.employeeId} value={data.advance.toFixed(2)} onChange={handleCellChange}/>
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2' data-value={data.employeeId} onClick={handlePenaltiesOrSendsClick}>
-                                    {data.penalties}
+                                    {data.penalties.toFixed(2)}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2' data-value={data.employeeId} onClick={handlePenaltiesOrSendsClick}>
-                                    {data.sends}
+                                    {data.sends.toFixed(2)}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
-                                    {data.payment}
+                                    {data.payment.toFixed(2)}
                                 </td>
                             </tr>
                         ))
