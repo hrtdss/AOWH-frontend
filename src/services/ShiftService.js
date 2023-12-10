@@ -2,7 +2,7 @@ import AxiosInstance from './AxiosInstance';
 
 
 export const ShiftService = {
-    getListOfOpenShifts,
+    getOpenedShift,
     getPastShifts,
     openShift,
     editShift,
@@ -10,9 +10,13 @@ export const ShiftService = {
     setCommentsForShift
 };
 
-async function getListOfOpenShifts(stockId) {
+async function getOpenedShift(stockId) {
     try {
         const response = await AxiosInstance.get(`/Shift/${stockId}`);
+        
+        if (response.status === 204) {
+            return null;
+        }
 
         if (response.status !== 200) {
             throw new Error(`Ошибка: ${response.status}`);
@@ -36,11 +40,11 @@ async function getListOfOpenShifts(stockId) {
             console.log('Сервер не отвечает.');
         } 
         else {
-            if (error.response.status === 400) {
-                return 'Смена не найдена';
-            }
+            // if (error.response.status === 400) {
+            //     return 'Смена не найдена';
+            // }
 
-            console.log('Запрос был прерван:', error.message);
+            console.log('Запрос был прерван:', error.response.data.detail);
         }
     }   
 }
@@ -59,6 +63,9 @@ async function getPastShifts(stockId) {
         for (let value of data) {
             const openingDateAndTime = value.openingDateAndTime.split('-');
             const closingDateAndTime = value.closingDateAndTime.split('-');
+
+            if (value.dayOrNight === 'Ночная')
+                value.dayOrNight += '\xA0';
 
             result.push({ 
                 value: { 
@@ -136,7 +143,7 @@ async function closeShift(values) {
             console.log('Сервер не отвечает.');
         } 
         else {
-            console.log('Запрос был прерван:', error.message);
+            console.log('Запрос был прерван:', error);
         }
     }
 }

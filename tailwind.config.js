@@ -9,6 +9,7 @@ module.exports = {
     },
     fontFamily: {
       ttnorms: ["TTNORMS"],
+      ptmono: "PT Mono"
     },
   },
   plugins: [],

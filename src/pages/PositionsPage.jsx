@@ -68,7 +68,7 @@ const PositionsPage = () => {
     return (
         <div className='flex flex-col items-center h-full max-w-[1300px] mx-auto my-8 font-ttnorms text-[#2c3e50]'>
             <div className='flex justify-center w-full mb-4'>
-                <button className='py-2 px-3 font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md select-none' onClick={() => setIsModalAddActive(true)}>
+                <button className='px-3 py-[6px] font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md select-none' onClick={() => setIsModalAddActive(true)}>
                     Добавить
                 </button>
             </div>

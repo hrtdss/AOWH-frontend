@@ -129,7 +129,7 @@ const EmployeesPage = () => {
                 </div>
 
                 <div className='py-1 px-2'>
-                    <button className='mx-2 px-3 py-2 font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md select-none' onClick={() => setIsModalAddActive(true)}>
+                    <button className='mx-2 px-3 py-[6px] font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md select-none' onClick={() => setIsModalAddActive(true)}>
                         Добавить
                     </button>
                 </div>

@@ -35,9 +35,12 @@ const ShiftsPage = () => {
         { value: 'Дневная', label: 'Дневная' },
         { value: 'Ночная', label: 'Ночная' }
     ]);
-    const [selectedLink, setSelectedLink] = useState(links[0]);
-
-    const [selectedDateAndTime, setSelectedDateAndTime] = useState('');
+    const [currentTime, ] = useState(new Date().getHours());
+    const [selectedLink, setSelectedLink] = useState((currentTime >= 8 && currentTime <= 18) ? links[0] : links[1]);
+    
+    const [currentDateTime,] = useState(new Date().toLocaleString().split(','));
+    const [currentDate, ] = useState(currentDateTime[0].split('.').reverse())
+    const [selectedDateAndTime, setSelectedDateAndTime] = useState(`${currentDate.join('-')}T${currentDateTime[1].substring(1,6)}`);
 
     const [employees, setEmployees] = useState([]);
     const [employeeSelectionFlag, setEmployeeSelectionFlag] = useState([]);
@@ -79,16 +82,20 @@ const ShiftsPage = () => {
     async function getShifts(stockId) {
         let pastShifts = await ShiftService.getPastShifts(stockId) || [];
 
-        const activeShift = await ShiftService.getListOfOpenShifts(stockId);
+        const activeShift = await ShiftService.getOpenedShift(stockId);
 
-        if (activeShift === 'Смена не найдена') {
+        const invalidValues = [null, undefined];
+        
+        if (invalidValues.includes(activeShift)) {
             setActiveShift('');
         }
         else {
             setActiveShift(activeShift);
             !shiftСlosingIndicator && setSelectedShift(activeShift);
 
-            pastShifts.push(activeShift);
+            if (!invalidValues.includes(activeShift)) {
+                pastShifts.push(activeShift);
+            }
         }
 
         setStockShifts(pastShifts);
@@ -149,6 +156,10 @@ const ShiftsPage = () => {
             selectedShift.value.dayOrNight = newValues.dayOrNight;
             selectedShift.value.employees = newListOfEmployees;
 
+            let splitedLabel = selectedShift.label.split('—');
+            splitedLabel[0] = newValues.dayOrNight
+            selectedShift.label = splitedLabel.join(' — ');
+
             forceUpdate();
         }
     }
@@ -161,9 +172,36 @@ const ShiftsPage = () => {
         getShifts(selectedStock.value);
     }, [selectedStock.value])
 
-    useEffect(() => {
+    useEffect(() => { // ! redo logic
         if (shiftСlosingIndicator) {
             getShifts(selectedStock.value);
+
+            const shiftLabel = stockShifts[stockShifts.length - 1].label;
+            const splitedLabel = shiftLabel.split('—');
+
+            const labelShiftType = splitedLabel[0].trim();
+            const labelDate = splitedLabel[1].trim().split('.');
+
+            if (labelShiftType === 'Ночная') {
+                const limit = new Date(labelDate[2], labelDate[1], 0).getDate();
+                const newDay = (Number(labelDate[0]) + 1).toString().padStart(2, '0');
+                
+                if (newDay <= limit) {
+                    splitedLabel[2] = ` ${newDay}.${labelDate[1]}.${labelDate[2]}`;
+                }
+                else {
+                    let newMonth = (Number(labelDate[1]) + 1).toString().padStart(2, '0');
+                    splitedLabel[2] = ` 01.${newMonth}.${labelDate[2]}`;
+                }
+
+                stockShifts[stockShifts.length - 1].label = splitedLabel.join('—');
+            }
+            else {
+                splitedLabel[2] = splitedLabel[1];
+
+                stockShifts[stockShifts.length - 1].label = splitedLabel.join('—');
+            }
+
             setSelectedShift(stockShifts[stockShifts.length - 1]);
 
             setShiftСlosingIndicator(false);
@@ -283,7 +321,7 @@ const ShiftsPage = () => {
                         </div>
 
                         <div className='py-1' hidden={isShiftEditingActive}>
-                            <button className='w-full px-3 py-2 font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md select-none' onClick={() => handleClick()}>
+                            <button className='w-full px-3 py-[6px] font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md select-none' onClick={() => handleClick()}>
                                 Открыть
                             </button>
                         </div>
@@ -328,11 +366,11 @@ const ShiftsPage = () => {
                 </div>
                 
                 <div className='flex flex-col items-center'>
-                    <div className='min-w-[350px] w-full mt-[2px] mb-2'>
+                    <div className='min-w-[370px] w-full mt-[2px] mb-2 font-ptmono font-semibold'>
                         <Select placeholder='Выберите смену' styles={SELECT_STYLE} options={stockShifts} value={selectedShift} onChange={setSelectedShift} isDisabled={isShiftEditingActive}/>
                     </div>
                     
-                    {selectedShift &&
+                    {selectedShift ?
                     <div>
                         <div className='flex items-center justify-center mb-2 text-lg'>
                             Выбранная смена:
@@ -384,6 +422,9 @@ const ShiftsPage = () => {
                                 </tr>
                             </tbody>
                         </table>
+                    </div> :
+                    <div className='mt-5 text-4xl text-center font-semibold text-red-700'>
+                        СМЕНА НА ТЕКУЩЕЕ<br/>ВРЕМЯ НЕ ОТКРЫТА
                     </div>}
                 </div>
             </div>

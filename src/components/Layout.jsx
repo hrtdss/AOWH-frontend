@@ -124,7 +124,7 @@ const Layout = () => {
                     
                     {numberOfPages !== 0 &&
                     <div className='text-center mr-4'>
-                        <button className='px-4 py-2 font-semibold bg-gray-100 border border-gray-300 rounded-md' onClick={() => signOut(() => navigate('/AOWH-frontend', {replace: true}))}>
+                        <button className='px-4 py-[6px] font-semibold bg-gray-100 border border-gray-300 rounded-md' onClick={() => signOut(() => navigate('/AOWH-frontend', {replace: true}))}>
                             Выйти
                         </button>
                     </div>}

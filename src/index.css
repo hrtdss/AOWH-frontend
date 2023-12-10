@@ -7,6 +7,11 @@
   src: url("../src/assets/fonts/TTNORMS-MEDIUM.ttf");
 }
 
+@font-face {
+  font-family: "PT Mono";
+  src: url("../src/assets/fonts/PTMono-Regular.ttf");
+}
+
 .remove-arrow::-webkit-inner-spin-button,
 .remove-arrow::-webkit-outer-spin-button {
   -webkit-appearance: none;

@@ -16,7 +16,7 @@ const AttendancePage = () => {
     const [selectedStock, setSelectedStock] = useState(savedRows?.stock ?? stocks[0]);
 
     const [savedMonthAndYear, ] = useState(savedRows?.date ?? '');
-    const [selectedMonthAndYear, setSelectedMonthAndYear] = useState((savedMonthAndYear && `${savedMonthAndYear[0]}-${savedMonthAndYear[1] < 10 ? '0' + savedMonthAndYear[1] : savedMonthAndYear[1]}`) ?? '');
+    const [selectedMonthAndYear, setSelectedMonthAndYear] = useState((savedMonthAndYear && `${savedMonthAndYear[0]}-${savedMonthAndYear[1].toString().padStart(2, '0')}`) || `${new Date().getFullYear()}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}`);
 
     const [daysInMonth, setDaysInMonth] = useState(savedRows?.daysInMonth ?? '');
 
@@ -28,10 +28,10 @@ const AttendancePage = () => {
     const [rows, setRows] = useState(savedRows === '' ? [] : savedRows?.data.length > 0 ? savedRows.data : '');
 
     async function getTableOfAttendance() {
-        if (!selectedMonthAndYear) {
-            alert('Ошибка. Для получение информации необходимо указать месяц и год.')
-            return;
-        }
+        // if (!selectedMonthAndYear) {
+        //     alert('Ошибка. Для получение информации необходимо указать месяц и год.')
+        //     return;
+        // }
 
         const currDate = new Date();
         const selectedDate = new Date(selectedMonthAndYear);
@@ -90,7 +90,7 @@ const AttendancePage = () => {
                 </div>  
 
                 <div className='py-1 px-2'>
-                    <button className='px-3 py-2 font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md select-none' onClick={() => getTableOfAttendance()}>
+                    <button className='px-3 py-[6px] font-normal text-white bg-amber-400 hover:bg-yellow-500 rounded-md select-none' onClick={() => getTableOfAttendance()}>
                         Загрузить
                     </button>
                 </div>
@@ -110,22 +110,18 @@ const AttendancePage = () => {
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Должность
                         </th>
-                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            {/* ДН/ <br/> см */}
+                        {/* <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Кол-во <br/> дневн. <br/> смен
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            {/* Часов/ <br/> ДН */}
                             Часов в <br/> дневн. <br/> смен
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            {/* НЧ/ <br/> см */}
                             Кол-во <br/> ночн. <br/> смен
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            {/* Часов/ <br/> НЧ */}
                             Часов в <br/> ночн. <br/> смен
-                        </th>
+                        </th> */}
                         {
                             columnsWithDaysOfMonth.map((data, index) => (
                                 (index + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
@@ -176,7 +172,7 @@ const AttendancePage = () => {
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.employee.positionName}
                                 </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
+                                {/* <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.employee.planForNumberOfDayShifts}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
@@ -187,7 +183,7 @@ const AttendancePage = () => {
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.employee.planForNumberOfHoursPerNightShift}
-                                </td>
+                                </td> */}
                                 {
                                     data.shifts.map((shiftData, shiftIndex) => (
                                         (shiftIndex + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
@@ -195,7 +191,7 @@ const AttendancePage = () => {
                                             <td key={shiftIndex + 1} className='px-2 py-[6px] text-center border-b-2 border-l-2'> 
                                                 {(shiftIndex + 1 === shiftData.day && shiftData.dayOrNight === 'Дневная') ? shiftData.workedHours : '-'}
                                             </td>
-                                            <td key={-(shiftIndex + 1)} className='px-2 py-[6px] text-center border-b-2 border-l-2'>
+                                            <td key={-(shiftIndex + 1)} className='px-2 py-[6px] text-center bg-slate-200 border-b-2 border-l-2'>
                                                 {(shiftIndex + 1 === shiftData.day && shiftData.dayOrNight === 'Ночная') ? shiftData.workedHours : '-'}
                                             </td>
                                         </>
