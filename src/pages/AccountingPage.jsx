@@ -3,10 +3,13 @@ import Select from 'react-select';
 
 import { AccountingService } from '../services/AccountingService';
 import { SELECT_STYLE } from '../services/Constants';
+import { Tooltip } from '../services/Tooltip';
 
 import AccountingCell from '../components/Accounting/AccountingCell';
 import Modal from '../components/Modal';
 import AccountingPenaltiesAndSends from '../components/Accounting/AccountingPenaltiesAndSends';
+
+// import { AiOutlineInfoCircle } from "react-icons/ai";
 
 
 const AccountingPage = () => {
@@ -120,10 +123,16 @@ const AccountingPage = () => {
                             Переработано <br/> часов НЧ
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Ставка, <br/> ч
+                            {/* Ставка, <br/> ч */}
+                            <Tooltip text={'формула 1 формула 1 1 1'}>
+                                <p>Ставка, <br/> ч</p>
+                            </Tooltip>
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Ставка, <br/> смн
+                            <Tooltip text={'формула 2'}>
+                                <p>Ставка, <br/> смн</p>
+                                {/* <AiOutlineInfoCircle size={15} className='absolute top-[-10px] left-[2px]'/> */}
+                            </Tooltip>
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Стаж, <br/> руб.
@@ -153,12 +162,15 @@ const AccountingPage = () => {
                             Засылы, <br/> руб.
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            Итого к <br/> выплате
+                            {/* Итого к <br/> выплате */}
+                            <Tooltip text={'формула 3 формула 3 формула 3 формула 3'}>
+                                <p>Итого к <br/> выплате</p>
+                            </Tooltip>
                         </th>
                     </tr>
                 </thead>
 
-                <tbody className='bg-slate-100'>
+                <tbody className='text-sm bg-slate-100'>
                     {
                         rows
                         ?.map((data, index) => (

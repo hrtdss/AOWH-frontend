@@ -82,3 +82,27 @@ input[type='time']::-webkit-calendar-picker-indicator {
 body {
   background-color: #f0f0f3;
 }
+
+
+.tooltip {
+  position: absolute;
+  right: -3%;
+  top: 34px; /* calc(-100% + 74px) */
+  min-width: 200px;
+  padding: 8px;
+  color: white; /* #2c3e50 */
+  background-color: black; /* rgb(241, 245, 249) */
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.tooltip::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: 8px;
+  width: 9px;
+  height: 9px;
+  background-color: black;
+  transform: rotate(45deg);
+}
