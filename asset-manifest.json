@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/AOWH-frontend/static/css/main.122b674f.css",
-    "main.js": "/AOWH-frontend/static/js/main.9affce0c.js",
+    "main.css": "/AOWH-frontend/static/css/main.c92dfb04.css",
+    "main.js": "/AOWH-frontend/static/js/main.5c0cbc79.js",
     "static/media/PTMono-Regular.ttf": "/AOWH-frontend/static/media/PTMono-Regular.295a1f32faf05a5784d8.ttf",
     "static/media/logo.png": "/AOWH-frontend/static/media/logo.efd469afc66d66a96f1e.png",
     "static/media/TTNORMS-MEDIUM.ttf": "/AOWH-frontend/static/media/TTNORMS-MEDIUM.6c3a2aacb77786ebcbc8.ttf",
     "index.html": "/AOWH-frontend/index.html",
-    "main.122b674f.css.map": "/AOWH-frontend/static/css/main.122b674f.css.map",
-    "main.9affce0c.js.map": "/AOWH-frontend/static/js/main.9affce0c.js.map"
+    "main.c92dfb04.css.map": "/AOWH-frontend/static/css/main.c92dfb04.css.map",
+    "main.5c0cbc79.js.map": "/AOWH-frontend/static/js/main.5c0cbc79.js.map"
   },
   "entrypoints": [
-    "static/css/main.122b674f.css",
-    "static/js/main.9affce0c.js"
+    "static/css/main.c92dfb04.css",
+    "static/js/main.5c0cbc79.js"
   ]
 }
