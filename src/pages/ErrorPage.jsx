@@ -20,7 +20,7 @@ const ErrorPage = () => {
                         But dont worry, you can find plenty of other things from homepage.
                     </p>
                     
-                    <button className='font-semibold text-white px-8 py-3 rounded-md bg-orange-400' onClick={() => navigate('/AOWH-frontend/', {replace: true})}>
+                    <button className='font-semibold text-white px-8 py-3 rounded-md bg-orange-400 select-none' onClick={() => navigate('/AOWH-frontend/', {replace: true})}>
                         Вернуться на главную
                     </button>
                 </div>

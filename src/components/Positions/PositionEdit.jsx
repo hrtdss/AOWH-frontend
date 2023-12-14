@@ -15,7 +15,11 @@ const PositionEdit = ({ rowData, setActive, changeValue }) => {
     const [valueFlags, setValueFlags] = useState({
         name: { isDirty: false, isEmpty: false },
         salary: { isDirty: false, isEmpty: false },
-        quarterlyBonus: { isDirty: false, isEmpty: false }
+        quarterlyBonus: { isDirty: false, isEmpty: false },
+        numberOfDayShifts: { isDirty: false, isEmpty: false },
+        numberOfHoursPerDayShift: { isDirty: false, isEmpty: false },
+        numberOfNightShifts: { isDirty: false, isEmpty: false },
+        numberOfHoursPerNightShift: { isDirty: false, isEmpty: false }
     });
 
     async function editPosition() {
@@ -83,8 +87,8 @@ const PositionEdit = ({ rowData, setActive, changeValue }) => {
 
     return (
         <div className='text-base text-[#2c3e50] whitespace-nowrap'>
-            <div className='grid grid-rows-3 grid-flow-col gap-2'>
-                <div className='row-span-3'>
+            <div className='grid grid-rows-4 grid-flow-col gap-2'>
+                <div className='row-span-4'>
                     <div className='mb-3'>
                         <label className='block mb-1 font-bold'>
                             Название
@@ -107,7 +111,35 @@ const PositionEdit = ({ rowData, setActive, changeValue }) => {
                     </div>
                 </div>
 
-                <div className='row-span-3 ml-4'>
+                <div className='row-span-4 ml-4'>
+                    <div className='mb-3'>
+                        <label className='block mb-1 font-bold'>
+                            Дневных смен
+                        </label>
+                        <input type='number' name='numberOfDayShifts' className={`remove-arrow w-full py-2 px-3 leading-tight shadow border ${(valueFlags.numberOfDayShifts.isDirty && valueFlags.numberOfDayShifts.isEmpty) && 'border-red-500'} rounded`} defaultValue={values.numberOfDayShifts} onChange={handleChange} onBlur={handleBlur}/>
+                    </div>
+                    <div className='mb-3'>
+                        <label className='block mb-1 font-bold'>
+                            Длительность дневной смены
+                        </label>
+                        <input type='number' name='numberOfHoursPerDayShift' className={`remove-arrow w-full py-2 px-3 leading-tight shadow border ${(valueFlags.numberOfHoursPerDayShift.isDirty && valueFlags.numberOfHoursPerDayShift.isEmpty) && 'border-red-500'} rounded`} defaultValue={values.numberOfHoursPerDayShift} onChange={handleChange} onBlur={handleBlur}/>
+                    </div>
+
+                    <div className='mb-3'>
+                        <label className='block mb-1 font-bold'>
+                            Ночных смен
+                        </label>
+                        <input type='number' name='numberOfNightShifts' className={`remove-arrow w-full py-2 px-3 leading-tight shadow border ${(valueFlags.numberOfNightShifts.isDirty && valueFlags.numberOfNightShifts.isEmpty) && 'border-red-500'} rounded`} defaultValue={values.numberOfNightShifts} onChange={handleChange} onBlur={handleBlur}/>
+                    </div>
+                    <div className='mb-3'>
+                        <label className='block mb-1 font-bold'>
+                            Длительность ночной смены
+                        </label>
+                        <input type='number' name='numberOfHoursPerNightShift' className={`remove-arrow w-full py-2 px-3 leading-tight shadow border ${(valueFlags.numberOfHoursPerNightShift.isDirty && valueFlags.numberOfHoursPerNightShift.isEmpty) && 'border-red-500'} rounded`} defaultValue={values.numberOfHoursPerNightShift} onChange={handleChange} onBlur={handleBlur}/>
+                    </div>
+                </div>
+
+                <div className='row-span-4 ml-4'>
                     <label className='block mb-1 font-bold'>
                         Доступ
                     </label>

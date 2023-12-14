@@ -54,7 +54,7 @@ function App() {
         //     {/* <Route path='/AOWH-frontend/login' element={<LoginPage/>}/> */}
 
         //     <Route path='/AOWH-frontend/' element={<Layout/>}>
-        //         <Route index element={<HomePage/>}/>
+        //         <Route index element={<LoginPage/>}/>
 
         //         <Route element={<RequireAuth allowedPages={['employeeCard', 'positionDirectory', 'changes', 'visitSchedule', 'accounting']}/>}>
         //             <Route element={<RequireAuth allowedPages={['employeeCard']}/>}>

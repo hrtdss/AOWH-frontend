@@ -124,13 +124,13 @@ const AccountingPage = () => {
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
                             {/* Ставка, <br/> ч */}
-                            <Tooltip text={'формула 1 формула 1 1 1'}>
-                                <p>Ставка, <br/> ч</p>
+                            <Tooltip text={'Формула расчета стоимости ставки за час'}>
+                                <p>Ставка, <br/> руб. ч</p>
                             </Tooltip>
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            <Tooltip text={'формула 2'}>
-                                <p>Ставка, <br/> смн</p>
+                            <Tooltip text={'Формула расчета стоимости ставки за смену'}>
+                                <p>Ставка, <br/> руб. смн</p>
                                 {/* <AiOutlineInfoCircle size={15} className='absolute top-[-10px] left-[2px]'/> */}
                             </Tooltip>
                         </th>
@@ -150,7 +150,10 @@ const AccountingPage = () => {
                             Отпуск, <br/> руб.
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            К выплате, <br/> руб.
+                            {/* К выплате, <br/> руб. */}
+                            <Tooltip text={'Формула расчета '}>
+                                <p>К выплате, <br/> руб.</p>
+                            </Tooltip>
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Аванс, <br/> руб.
@@ -163,7 +166,7 @@ const AccountingPage = () => {
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
                             {/* Итого к <br/> выплате */}
-                            <Tooltip text={'формула 3 формула 3 формула 3 формула 3'}>
+                            <Tooltip text={'Формула расчета'}>
                                 <p>Итого к <br/> выплате</p>
                             </Tooltip>
                         </th>

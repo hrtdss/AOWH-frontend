@@ -22,44 +22,44 @@ const Layout = () => {
         <div className='flex flex-col h-screen max-h-screen'>
             <header className='select-none'>
                 <div className='flex justify-between items-center h-20 max-w-[1340px] mx-auto px-4 font-ttnorms font-medium uppercase text-[#2c3e50] shadow-md rounded-b-2xl'>
-                    <NavLink to='/AOWH-frontend' className='flex text-base/5 text-left items-center uppercase'>
-                        <img className='h-16' src={Logo} alt='header logo'/>
+                    <div className='flex text-base/5 text-left items-center uppercase'>
+                        <img className='h-16' src={Logo} alt='header logo' onClick={() => signOut(() => navigate('/AOWH-frontend', {replace: true}))}/>
                         <span>Ежедневная срочная<br/>доставка груза</span>
-                    </NavLink>
+                    </div>
 
-                    <ul className='hidden md:flex items-center text-base'>
-                        {userData?.employeeCard && 
-                        <li className='p-4 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
-                            <NavLink to='employeeCard' className={({ isActive }) => isActive ? 'px-4 py-2 text-[#ffc107] drop-shadow-sm shadow-[#808080] border-x-2 border-[#ffc107] ease duration-300' : 'py-[30px]'}>
-                                Список сотрудников
-                            </NavLink>
-                        </li>}
-
-                        {userData?.positionDirectory && 
-                        <li className='p-4 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
-                            <NavLink to='positions' className={({ isActive }) => isActive ? 'px-4 py-2 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : 'py-[30px]'}>
-                                Список должностей
-                            </NavLink>
-                        </li>}
-
+                    <ul className='hidden md:flex items-center text-base/5'>
                         {userData?.changes && 
-                        <li className='p-4 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
-                            <NavLink to='shifts' className={({ isActive }) => isActive ? 'px-4 py-2 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : 'py-[30px]'}>
-                                Смены
+                        <li className='min-w-[160px] text-center p-3 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
+                            <NavLink to='shifts' className={({ isActive }) => isActive ? 'inline-block text-center px-4 py-2 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : 'inline-block text-center py-[30px]'}>
+                                Назначение <br/> смен
                             </NavLink>
                         </li>}
 
                         {userData?.visitSchedule && 
-                        <li className='p-4 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
-                            <NavLink to='attendance' className={({ isActive }) => isActive ? 'px-4 py-2 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : 'py-[30px]'}>
-                                Посещения
+                        <li className='min-w-[160px] text-center p-3 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
+                            <NavLink to='attendance' className={({ isActive }) => isActive ? 'inline-block text-center px-4 py-2 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : 'inline-block text-center py-[30px]'}>
+                                Учет <br/> посещений
                             </NavLink>
                         </li>}
 
                         {userData?.accounting && 
-                        <li className='p-4 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
-                            <NavLink to='accounting' className={({ isActive }) => isActive ? 'px-4 py-2 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : 'py-[30px]'}>
-                                Учёт
+                        <li className='min-w-[160px] text-center p-3 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
+                            <NavLink to='accounting' className={({ isActive }) => isActive ? 'inline-block text-center px-4 py-2 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : 'inline-block text-center py-[30px]'}>
+                                Расчет ЗП
+                            </NavLink>
+                        </li>}
+
+                        {userData?.positionDirectory && 
+                        <li className='min-w-[160px] text-center p-3 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
+                            <NavLink to='positions' className={({ isActive }) => isActive ? 'inline-block text-center px-4 py-2 text-[#ffc107] border-x-2 border-[#ffc107] ease duration-300' : 'inline-block text-center py-[30px]'}>
+                                Список <br/> должностей
+                            </NavLink>
+                        </li>}
+
+                        {userData?.employeeCard && 
+                        <li className='min-w-[160px] text-center p-3 hover:text-[#ffc107] hover:drop-shadow-sm hover:shadow-[#808080] hover:duration-200'>
+                            <NavLink to='employeeCard' className={({ isActive }) => isActive ? 'inline-block text-center px-4 py-2 text-[#ffc107] drop-shadow-sm shadow-[#808080] border-x-2 border-[#ffc107] ease duration-300' : 'inline-block text-center py-[30px]'}>
+                                Список <br/> сотрудников
                             </NavLink>
                         </li>}
                     </ul>
@@ -70,10 +70,24 @@ const Layout = () => {
 
                     <div className={nav ? `fixed left-0 top-[72px] w-full h-[calc(${numberOfPages}*57px+8px)] bg-[#f0f0f3] ease-in-out duration-500 shadow-lg rounded-b-2xl` : 'ease duration-500 fixed top-[72px] left-[-100%]'}>
                         <ul className='text-base mt-2'>
-                            {userData?.employeeCard && 
+                            {userData?.changes && 
                             <li className='p-4 border-t border-gray-600 active:text-[#ffc107] active:drop-shadow-sm active:shadow-[#808080]'>
-                                <NavLink to='employeeCard' onClick={closeNav} className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] border-x-2 border-[#ffc107]' : ''}>
-                                    Список сотрудников
+                                <NavLink to='shifts' onClick={closeNav} className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] border-x-2 border-[#ffc107]' : ''}>
+                                    Назначение смен
+                                </NavLink>
+                            </li>}
+
+                            {userData?.visitSchedule && 
+                            <li className='p-4 border-t border-gray-600 active:text-[#ffc107] active:drop-shadow-sm active:shadow-[#808080]'>
+                                <NavLink to='attendance' onClick={closeNav} className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] border-x-2 border-[#ffc107]' : ''}>
+                                    Учет посещений
+                                </NavLink>
+                            </li>}
+
+                            {userData?.accounting && 
+                            <li className='p-4 border-t border-gray-600 active:text-[#ffc107] active:drop-shadow-sm active:shadow-[#808080]'>
+                                <NavLink to='accounting' onClick={closeNav} className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] border-x-2 border-[#ffc107]' : ''}>
+                                    Расчет ЗП
                                 </NavLink>
                             </li>}
 
@@ -84,24 +98,10 @@ const Layout = () => {
                                 </NavLink>
                             </li>}
 
-                            {userData?.changes && 
+                            {userData?.employeeCard && 
                             <li className='p-4 border-t border-gray-600 active:text-[#ffc107] active:drop-shadow-sm active:shadow-[#808080]'>
-                                <NavLink to='shifts' onClick={closeNav} className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] border-x-2 border-[#ffc107]' : ''}>
-                                    Смены
-                                </NavLink>
-                            </li>}
-
-                            {userData?.visitSchedule && 
-                            <li className='p-4 border-t border-gray-600 active:text-[#ffc107] active:drop-shadow-sm active:shadow-[#808080]'>
-                                <NavLink to='attendance' onClick={closeNav} className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] border-x-2 border-[#ffc107]' : ''}>
-                                    Посещения
-                                </NavLink>
-                            </li>}
-                            
-                            {userData?.accounting && 
-                            <li className='p-4 border-t border-gray-600 active:text-[#ffc107] active:drop-shadow-sm active:shadow-[#808080]'>
-                                <NavLink to='accounting' onClick={closeNav} className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] border-x-2 border-[#ffc107]' : ''}>
-                                    Учёт
+                                <NavLink to='employeeCard' onClick={closeNav} className={({ isActive }) => isActive ? 'px-4 text-[#ffc107] border-x-2 border-[#ffc107]' : ''}>
+                                    Список сотрудников
                                 </NavLink>
                             </li>}
                         </ul>

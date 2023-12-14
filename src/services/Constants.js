@@ -1,5 +1,5 @@
-export const API_URL = 'https://aowh-test.otr-it.ru/api'
-// export const API_URL = 'https://localhost:7183/api'
+// export const API_URL = 'https://aowh-test.otr-it.ru/api'
+export const API_URL = 'https://localhost:7183/api'
 
 export const DISMISSED_EMPLOYEE = '9ad29fb2-f9c4-4e4d-9155-12af0227ea67'
 export const ADMINISTRATOR = '44213af5-ab16-4853-9d8e-c2d6c176ef7f'
