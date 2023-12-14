@@ -1,6 +1,6 @@
 import { createContext, useState } from 'react';
 import axios from 'axios';
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 import { API_URL } from '../services/Constants';
 import { EmployeeService } from '../services/EmployeeService';
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
                     }
                 }
 
-                const decoded = jwt_decode(data.token);
+                const decoded = jwtDecode(data.token);
                 let currentEmployee = await EmployeeService.getDataByEmployeeId(decoded.EmployeeId);
                 localStorage.setItem('positionId', currentEmployee.employeeData.positionId);
 
