@@ -10,7 +10,7 @@ import Modal from '../components/Modal';
 import AccountingPenaltiesAndSends from '../components/Accounting/AccountingPenaltiesAndSends';
 
 // import { AiOutlineInfoCircle } from "react-icons/ai";
-
+// <AiOutlineInfoCircle size={15} className='absolute top-[-10px] left-[2px]'/>
 
 const AccountingPage = () => {
     const [savedRows, ] = useState(JSON?.parse(localStorage.getItem('savedAccounting')) ?? '');
@@ -123,15 +123,19 @@ const AccountingPage = () => {
                             Переработано <br/> часов НЧ
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            {/* Ставка, <br/> ч */}
-                            <Tooltip text={'Формула расчета стоимости ставки за час'}>
+                            {/* <Tooltip text={'Формула расчета стоимости ставки за час'}>
                                 <p>Ставка, <br/> руб. ч</p>
+                            </Tooltip> */}
+                            <Tooltip text={'Формула расчета стоимости дневной смены'}>
+                                <p>Стоимость ДН <br/> смены, руб.</p>
                             </Tooltip>
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
-                            <Tooltip text={'Формула расчета стоимости ставки за смену'}>
+                            {/* <Tooltip text={'Формула расчета стоимости ставки за смену'}>
                                 <p>Ставка, <br/> руб. смн</p>
-                                {/* <AiOutlineInfoCircle size={15} className='absolute top-[-10px] left-[2px]'/> */}
+                            </Tooltip> */}
+                            <Tooltip text={'Формула расчета стоимости ночной смены'}>
+                                <p>Стоимость НЧ <br/> смены, руб.</p>
                             </Tooltip>
                         </th>
                         <th className='px-1 py-1 text-center border-b-2 border-l-2'>
@@ -193,11 +197,17 @@ const AccountingPage = () => {
                                 <td className='px-4 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.overtimeNight}
                                 </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
+                                {/* <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.salaryForHour}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.salaryForShift}
+                                </td> */}
+                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
+                                    {data.salaryForDayShift}
+                                </td>
+                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
+                                    {data.salaryForNightShift}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.seniority}

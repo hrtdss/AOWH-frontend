@@ -110,7 +110,7 @@ const AttendancePage = () => {
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Должность
                         </th>
-                        <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
+                        {/* <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Кол-во <br/> дневн. <br/> смен
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
@@ -121,7 +121,7 @@ const AttendancePage = () => {
                         </th>
                         <th rowSpan={2} className='px-1 py-1 text-center border-b-2 border-l-2'>
                             Часов в <br/> ночн. <br/> смен
-                        </th>
+                        </th> */}
                         {
                             columnsWithDaysOfMonth.map((data, index) => (
                                 (index + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&
@@ -172,7 +172,7 @@ const AttendancePage = () => {
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.employee.positionName}
                                 </td>
-                                <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
+                                {/* <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.employee.planForNumberOfDayShifts}
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
@@ -183,7 +183,7 @@ const AttendancePage = () => {
                                 </td>
                                 <td className='px-1 py-[6px] text-center border-b-2 border-l-2'>
                                     {data.employee.planForNumberOfHoursPerNightShift}
-                                </td>
+                                </td> */}
                                 {
                                     data.shifts.map((shiftData, shiftIndex) => (
                                         (shiftIndex + 1 <= ((fullMonthDataFlag && daysInMonth.totalDays) || (!fullMonthDataFlag && daysInMonth.daysFromBeginningOfMonth))) &&

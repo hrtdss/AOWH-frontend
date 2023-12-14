@@ -101,7 +101,7 @@ const PositionAdd = ({ setActive, addValue }) => {
     }
 
     return (
-        <div className='text-base text-[#2c3e50] whitespace-nowrap'>
+        <div className='text-base text-[#2c3e50] whitespace-nowrap select-none'>
             <div className='grid grid-rows-4 grid-flow-col gap-2'>
                 <div className='row-span-4'>
                     <div className='mb-3'>
